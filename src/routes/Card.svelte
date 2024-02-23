@@ -9,7 +9,7 @@
         </div>
         <div id="logo-flip-back">
             <div class="text">
-                <h1>contact@amun.pl</h1>
+                <h1>contactⓐⓣamun.pl</h1>
                 <p>Or, even better,<br> use the chat box<br> bottom right</p>
                 <!--<p>AMUN Technologie
                 <br>895 224 10 28</p> -->
