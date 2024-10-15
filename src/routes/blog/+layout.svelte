@@ -1,204 +1,55 @@
 <script lang="ts">
-    import { MeterChart } from '@carbon/charts-svelte';
-    import { Statuses, ChartTheme } from '@carbon/charts';
     import Nav from '$lib/components/navigation/nav.svelte';
+    import ProgressBars from '$lib/components/header/ProgressBars.svelte';
     //import YoutubeFeed from '$lib/components/youtube-feed/YoutubeFeed.svelte';
-    import '@carbon/charts-svelte/styles.css';
 </script>
 
 <aside>
     <section id="header">
         <img src="/eye-of-ra.png" alt="">
-        <h3>Kamil Śmigielski</h3>
+        <h3>Kamil 'HighPriest'</h3>
         <p>Software Developer</p>
         <p>Electronics Engineer</p>
     </section>
     <section id="personal">
         <p>Residence: <span>Wrocław, Poland</span></p>
-        <p>Age: <span>25</span></p>
+        <p>Age: <span>26</span></p>
     </section>
     <section id="languages">aa</section>
     <section id="goals">
-    <!--
-    <MeterChart 
-            data={[
-                {group: "IT Engineer", value: "100"},
-            ]}
-            options={{
-                meter: {
-                    peak: 60,
-                    status: {
-                        ranges: [{
-                            range: [
-                                0,
-                                60
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                60,
-                                80
-                            ], status: Statuses.WARNING
-                            },
-                            {
-                            range: [
-                                80,
-                                100
-                            ], status: Statuses.SUCCESS
-                            }
-                        ]
-                    }
-                },
-                toolbar: {
-                    enabled: false
-                },
-                theme: ChartTheme.G100,
-                height: "50px"
-            }}/>
-    -->
-    <!--
-    <MeterChart 
-        data={[
-            {group: "Electronics Engineer", value: "80"},
-        ]}
-        options={{
-            meter: {
-                peak: 90,
-                status: {
-                    ranges: [{
-                            range: [
-                                0,
-                                60
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                60,
-                                90
-                            ], status: Statuses.WARNING
-                            },
-                            {
-                            range: [
-                                90,
-                                100
-                            ], status: Statuses.SUCCESS
-                            }
-                    ]
-                }
-            },
-            toolbar: {
-                enabled: false
-            },
-            theme: ChartTheme.G100,
-            height: "50px"
-        }}/>
-    -->
-    <h2>Goals</h2>
-    <MeterChart 
-        data={[
-            {group: "Sim & Pathing Thesis", value: "30"},
-        ]}
-        options={{
-            meter: {
-                peak: 60,
-                status: {
-                    ranges: [{
-                            range: [
-                                0,
-                                60
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                60,
-                                80
-                            ], status: Statuses.WARNING
-                            },
-                            {
-                            range: [
-                                80,
-                                100
-                            ], status: Statuses.SUCCESS
-                            }
-                    ]
-                }
-            },
-            toolbar: {
-                enabled: false
-            },
-            theme: ChartTheme.G100,
-            height: "50px"
-        }}/>
-    <MeterChart 
-        data={[
-            {group: "SimRacing League", value: "10"},
-        ]}
-        options={{
-            meter: {
-                peak: 60,
-                status: {
-                    ranges: [{
-                            range: [
-                                0,
-                                60
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                60,
-                                80
-                            ], status: Statuses.WARNING
-                            },
-                            {
-                            range: [
-                                80,
-                                100
-                            ], status: Statuses.SUCCESS
-                            }
-                    ]
-                }
-            },
-            toolbar: {
-                enabled: false
-            },
-            theme: ChartTheme.G100,
-            height: "50px"
-        }}/>
-    <MeterChart 
-        data={[
-            {group: "World Domination", value: "1"},
-        ]}
-        options={{
-            meter: {
-                peak: 60,
-                status: {
-                    ranges: [{
-                            range: [
-                                0,
-                                80
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                60,
-                                80
-                            ], status: Statuses.DANGER
-                            },
-                            {
-                            range: [
-                                80,
-                                100
-                            ], status: Statuses.SUCCESS
-                            }
-                    ]
-                }
-            },
-            toolbar: {
-                enabled: false
-            },
-            theme: ChartTheme.G100,
-            height: "50px"
-        }}/>
+        <h2>Goals</h2>
+        <div>
+            <h3>Degrees</h3>
+            <ProgressBars>
+                <label for="progress-bar-1">Micro-Electronics</label>
+                <progress id="progress-bar-1" value="100" max="100">100 %</progress>
+                <output id="progress-output-1">100%</output>
+                <label for="progress-bar-2">Computer Science</label>
+                <progress id="progress-bar-2" value="100" max="100">100 %</progress>
+                <output id="progress-output-2">100%</output>
+            </ProgressBars>
+        </div>
+        <br>
+        <div>
+            <h3>Certification</h3>
+            <ProgressBars>
+                <label for="progress-bar-3">Rust senior</label>
+                <progress id="progress-bar-3" value="30" max="100">30 %</progress>
+                <output id="progress-output-3">30%</output>
+                <label for="progress-bar-4">Azure DevOps</label>
+                <progress id="progress-bar-4" value="10" max="100">10 %</progress>
+                <output id="progress-output-4">10%</output>
+            </ProgressBars>
+        </div>
+        <br>
+        <div>
+            <h3>Generic</h3>
+            <ProgressBars>
+                <label for="progress-bar-4">World Domination</label>
+                <progress id="progress-bar-4" value="2" max="100">2 %</progress>
+                <output id="progress-output-4">2%</output>
+            </ProgressBars>
+        </div>
     </section>
     <section id="feed">
     </section>
@@ -208,7 +59,7 @@
 </main>
 <Nav />
 
-<style lang="less">
+<style lang="scss">
 h1, h2, h3, h4, h5, h6, p {
     width: 100%;
     display: flex;
