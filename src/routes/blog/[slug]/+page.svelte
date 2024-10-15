@@ -1,8 +1,7 @@
 <script>
 	export let data;
 	import { onMount } from 'svelte';
-	import '$lib/components/Ghost/Post.css'
-	import '$lib/components/Ghost/Prism-tomorrow-default.css'
+	import '$lib/components/Ghost/Post3.scss';
 
 	onMount(() => {
 		const script = document.createElement("script");
@@ -20,6 +19,11 @@
 		document.head.appendChild(script2);
 	})
 </script>
+<style lang="scss">
+	//@import '$lib/components/Ghost/Post.css';
+	//@import '$lib/components/Ghost/Prism-tomorrow-default.css';
+</style>
+<!--Prism is for code snippets -->
 <svelte:head>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </svelte:head>
@@ -27,7 +31,7 @@
 {#await data.post}
 <p>...loading</p>	
 {:then post} 
-<h2>{post?.title ?? ''}</h2>
+<h1>{post?.title ?? ''}</h1>
 {@html post?.html ?? ''}
 {/await}
 

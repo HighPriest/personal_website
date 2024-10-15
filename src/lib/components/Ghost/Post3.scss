@@ -1,0 +1,442 @@
+/** Imports */
+@import '_Mixins';
+
+/** Colors */
+
+$white: #fff;
+$black: #000;
+$titles: #333;
+$gray: #9b9b9b;
+
+$background-color: #000;
+
+/** Config  */
+
+/* Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    //background-color: #f4f4f4;
+    //color: #333;
+}
+
+/* Post Content */
+article {
+    max-width: 800px;
+    /* Adjust as needed */
+    margin: auto;
+
+
+    /* Header Styles */
+    h1 {
+        font-size: 2.5em;
+        margin: 40px 0 20px;
+        /* Top, Bottom */
+    }
+
+    h2 {
+        font-size: 2em;
+        margin: 30px 0 15px;
+        /* Top, Bottom */
+    }
+
+    h3 {
+        font-size: 1.75em;
+        margin: 25px 0 10px;
+        /* Top, Bottom */
+    }
+
+    h4 {
+        font-size: 1.5em;
+        margin: 20px 0 8px;
+        /* Top, Bottom */
+    }
+
+    h5 {
+        font-size: 1.25em;
+        margin: 15px 0 5px;
+        /* Top, Bottom */
+    }
+
+    h6 {
+        font-size: 1em;
+        margin: 10px 0 5px;
+        /* Top, Bottom */
+    }
+
+    /* Paragraph Styles */
+    p {
+        margin: 15px 0;
+        text-align: justify;
+    }
+
+    // Base styles for lists
+    $list-padding: 15px; // Base padding
+    $list-margin: 10px; // Base margin
+
+    ul,
+    ol {
+        margin: $list-margin 0;
+        padding-left: 0; // Remove default padding
+        list-style: none; // Remove default bullets/numbers
+    }
+    /* Inspired by this codepen https://codepen.io/equinusocio/pen/OqpBKJ */
+    /* Unordered List */
+    ul {
+        // counter-reset: index;
+        padding: 0;
+        margin: 0;
+        margin-top: 1rem;
+        padding-left: 2rem;
+        width: auto;
+        max-width: 100%;
+
+        /* List element */
+        li {
+            // counter-increment: index;
+            align-items: center;
+            padding: 6px 0 0 0;
+            margin: 0px 0px 6px 0px;
+            box-sizing: border-box;
+
+            li {
+                border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            }
+        }
+
+
+        /* Element counter */
+        li::before {
+            content: "•";
+            font-size: 3rem;
+            line-height: 1.5rem;
+            text-align: right;
+            font-weight: bold;
+            vertical-align: text-top;
+            min-width: 50px;
+            padding-right: 12px;
+            font-variant-numeric: tabular-nums;
+            align-self: flex-start;
+            background-image: linear-gradient(to bottom, aquamarine, orangered);
+            background-attachment: fixed;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        /* Element separation */
+        li+li {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    /* Ordered List */
+    ol {
+        counter-reset: index;
+        padding: 0;
+        margin: 0;
+        margin-top: 1rem;
+        padding-left: 2rem;
+        width: auto;
+        max-width: 100%;
+
+        /* List element */
+        li {
+            counter-increment: index;
+            align-items: center;
+            padding: 6px 0 0 0;
+            margin: 0px 0px 6px 0px;
+            box-sizing: border-box;
+
+            li {
+                border-top: 1px dashed rgba(255, 255, 255, 0.2);
+            }
+        }
+
+
+        /* Element counter */
+        li::before {
+            content: counters(index, ".", decimal-leading-zero);
+            font-size: 1.5rem;
+            text-align: right;
+            font-weight: bold;
+            min-width: 50px;
+            padding-right: 12px;
+            font-variant-numeric: tabular-nums;
+            align-self: flex-start;
+            background-image: linear-gradient(to bottom, aquamarine, orangered);
+            background-attachment: fixed;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        /* Element separation */
+        li+li {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    }
+
+
+
+    /* Figure Styles */
+    figure {
+        margin: 20px 0;
+        text-align: center;
+        width: 100%;
+        //aspect-ratio: 16/9;
+
+        &.kg-embed-card {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            > iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: 0;
+            }
+        }
+
+        img,
+        iframe {
+            max-width: -webkit-fill-available;
+            width: auto;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        figcaption {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+    }
+
+    /* Blockquote Styles */
+    blockquote {
+        position: relative;
+        //letter-spacing: 0.2px;
+        //line-height: 1.5;
+        //font-size: 1.125rem;
+        font-style: italic;
+        font-family: Georgia, "Times New Roman", Times, serif;
+        padding: 0 40px;
+        margin: 0 0 25px;
+
+        &.kg-blockquote-alt {
+            color: var(--primary-subtle-color);
+            line-height: 1.2;
+            font-family: inherit;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 2rem;
+            padding-top: 20px;
+            padding-bottom: 20px;
+
+            &:before {
+                display: none;
+            }
+        }
+
+        &:before {
+            content: '"';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: var(--primary-foreground-color);
+            line-height: 1;
+            padding-right: 1rem;
+            font-size: 3.5rem;
+            font-weight: bold;
+            background-image: linear-gradient(to bottom, aquamarine, orangered);
+            background-attachment: fixed;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    /* Link Styles */
+    a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Code Styles */
+    pre {
+        line-height: 1.4;
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        overflow: auto;
+    }
+
+    code {
+        font-style: italic;
+        //padding: 2px 4px;
+        //border-radius: 4px;
+    }
+
+    .kg-bookmark-card {
+        width: 100%;
+        padding: 0 !important;
+        margin: 30px auto !important;
+        background: var(--background-color);
+
+        &:hover {
+            .kg-bookmark-container {
+                opacity: 0.8;
+                color: var(--pure-white);
+                background-color: var(--primary-color);
+            }
+
+            .kg-bookmark-content>* {
+                color: var(--pure-white);
+            }
+        }
+
+        .kg-bookmark-container {
+            display: flex;
+            color: var(--primary-foreground-color);
+            background-color: var(--fourth-color);
+            text-decoration: none !important;
+            min-height: 148px;
+            box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 4px,
+                rgba(0, 0, 0, 0.1) 0px 0px 0px 1px;
+            border-radius: 3rem;
+            @include transition();
+        }
+
+        .kg-bookmark-content {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 20px;
+        }
+
+        .kg-bookmark-title {
+            font-size: 1.125rem;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .kg-bookmark-description {
+            font-size: 0.875rem;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-top: 12px;
+            overflow-y: hidden;
+        }
+
+        .kg-bookmark-thumbnail {
+            position: relative;
+            min-width: 30%;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .kg-bookmark-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover;
+            border-radius: 0 3px 3px 0;
+        }
+
+        .kg-bookmark-metadata {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: var(--titles-color);
+            margin-top: 14px;
+        }
+
+        .kg-bookmark-icon {
+            width: 22px !important;
+            height: 22px !important;
+            margin-right: 8px !important;
+        }
+
+        .kg-bookmark-author:after {
+            content: "•";
+            margin: 0 6px;
+        }
+
+        .kg-bookmark-publisher {
+            color: inherit;
+        }
+
+        @media (max-width: 500px) {
+            .kg-bookmark-container {
+                flex-direction: column;
+            }
+
+            .kg-bookmark-thumbnail {
+                order: 1;
+                width: 100%;
+                min-height: 160px;
+            }
+
+            .kg-bookmark-thumbnail img {
+                border-radius: 3px 3px 0 0;
+            }
+
+            .kg-bookmark-content {
+                order: 2;
+            }
+        }
+    }
+
+    .kg-card+.kg-bookmark-card {
+        margin-top: 0;
+    }
+
+
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin: 30px 0 15px;
+        }
+
+        h2 {
+            font-size: 1.75em;
+            margin: 25px 0 12px;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            margin: 20px 0 8px;
+        }
+    }
+}

@@ -30,7 +30,7 @@ export async function load({ params }) {
 					authors: postJson.authors!.map((author) => author.name),
 					excerpt: postJson.excerpt ? postJson.excerpt : '',
 					html: postJson.html ? postJson.html : ''
-				} ?? null
+				}
 		};
 	} catch (error) {
 		console.error(error);
