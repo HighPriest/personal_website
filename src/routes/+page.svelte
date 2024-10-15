@@ -1,7 +1,7 @@
 <!-- TODO: Add visit tracking -->
 <script lang="ts">
 // import Header from '$lib/header/Header.svelte';
-import Card from "./Card.svelte";
+import Card2 from "./Card2.svelte";
 import LiveMatrix from "$lib/components/LiveMatrix.svelte";
 
 </script>
@@ -9,15 +9,15 @@ import LiveMatrix from "$lib/components/LiveMatrix.svelte";
 <!-- <Header /> -->
 <!-- TODO: Improve and adapt the import header -->
 <svelte:head>
-	<title>Amun IT Software</title>
-	<meta name="description" content="In control of your information" />
+	<title>Amun - Information Technology</title>
+	<meta name="description" content="Unlock the enigma. Delve into layers of knowledge, where technology intertwines with mystery. Discover the unseen. Are you ready, for a new quest?" />
 </svelte:head>
 
 <video autoplay muted id="background">
 	<source src="media/background.mp4" type="video/mp4" />
 </video>
 <main>
-    <Card />
+    <Card2 />
 </main>
 <LiveMatrix />
 

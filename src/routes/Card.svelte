@@ -1,7 +1,7 @@
 <div id="logo">
     <div id="logo-flip">
         <div id="logo-flip-front">
-            <img src="eye-of-ra.png" alt="" />
+            <img src="eye-of-ra.webp" alt="" />
             <div class="text">
                 <h2>Amun</h2>
                 <p>Tech & Software Development</p>
@@ -61,7 +61,7 @@ img {
 
 .text {
     text-align: center;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Poppins', sans-serif;
     color: white;
 }
 
