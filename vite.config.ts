@@ -6,5 +6,12 @@ export default defineConfig({
 	plugins: [sveltekit(), paraglide({
         project: "./project.inlang",
         outdir: "./src/lib/paraglide"
-    })]
+    })],
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler'
+            }
+        }
+    }
 });
