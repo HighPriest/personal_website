@@ -23,7 +23,7 @@ export async function load({ params }) {
 					slug: postJson.slug,
 					feature_image: postJson.feature_image
 						? postJson.feature_image
-						: 'https://amun.pl/eye-of-ra.png',
+						: 'https://amun.pl/eye-of-ra.webp',
 					feature_image_alt: postJson.feature_image_alt ? postJson.feature_image_alt : '',
 					updated_at: postJson.updated_at,
 					tags: postJson.tags!.map((tag) => tag.name),

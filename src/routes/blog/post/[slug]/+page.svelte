@@ -26,6 +26,11 @@
 <!--Prism is for code snippets -->
 <svelte:head>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	{#await data.post}
+	{:then post}
+	<title>{post?.title}</title>
+	<meta name="description" content="{post?.excerpt}"/>
+	{/await}
 </svelte:head>
 
 {#await data.post}

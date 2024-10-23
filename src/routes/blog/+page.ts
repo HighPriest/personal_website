@@ -24,7 +24,7 @@ export const load = (async () => {
 			tags: tagsJson.map((tag) => ({
 				name: tag.name ? tag.name : 'No title',
 				slug: tag.slug!,
-				feature_image: tag.feature_image ? tag.feature_image : 'https://amun.pl/eye-of-ra.png',
+				feature_image: tag.feature_image ? tag.feature_image : 'https://amun.pl/eye-of-ra.webp',
 				description: tag.description ? tag.description : '',
 				count: tag.count?.posts || 0
 			}))

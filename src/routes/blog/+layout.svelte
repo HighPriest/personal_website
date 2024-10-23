@@ -6,7 +6,7 @@
 
 <aside>
     <section id="header">
-        <img src="/eye-of-ra.png" alt="">
+        <a href="/blog"><img src="/eye-of-ra.webp" alt=""></a>
         <h3>Kamil 'HighPriest'</h3>
         <p>Software Developer</p>
         <p>Electronics Engineer</p>
@@ -112,15 +112,6 @@ aside {
     h3 {
         font-size: 18px;
         margin-top: 0;
-    }
-
-    a {
-        display: inline-block;
-        background-color: #333;
-        color: #fff;
-        text-decoration: none;
-        padding: 1rem 2rem;
-        border-radius: 4px;
     }
 }
 

@@ -2,7 +2,7 @@ export const prerender = true;
 import type { LayoutLoad } from './$types'
 import GhostContentAPI from '@tryghost/content-api';
 
-export const load = (async () => {
+/*export const load = (async () => {
 	const GHOST_URL = 'https://ghost.amun.pl';
 	const GHOST_KEY = 'e701b4bd9cb5352d3dc49c381b';
 	const GHOST_VERSION = 'v5.0';
@@ -25,7 +25,7 @@ export const load = (async () => {
 				title: post.title ? post.title : 'No title',
 				slug: post.slug!,
 				updated_at: post.updated_at!,
-				feature_image: post.feature_image ? post.feature_image : 'https://amun.pl/eye-of-ra.png',
+				feature_image: post.feature_image ? post.feature_image : 'https://amun.pl/eye-of-ra.webp',
 				feature_image_alt: post.feature_image_alt ? post.feature_image_alt : '',
 				excerpt: post.excerpt ? post.excerpt : '',
 				tags: post.tags!.map((tag) => tag.slug),
@@ -36,3 +36,4 @@ export const load = (async () => {
 		console.error(error);
 	}
 }) satisfies LayoutLoad;
+*/
