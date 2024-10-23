@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-node';
+import adapter from 'svelte-adapter-deno';
 import { sveltePreprocess } from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -17,9 +17,7 @@ const config = {
 		files: {
 			assets: 'static'
 		},
-		adapter: adapter({
-			out: 'build'
-		})
+		adapter: adapter()
 	}
 };
 
