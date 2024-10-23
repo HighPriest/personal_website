@@ -27,6 +27,7 @@
 		opacity 0.4s ease-in-out 0.35s;
 }
 .msgbox.svelte-1ybb335 {
+	max-width: 720px;
 	bottom: 0;
 	right: 20px;
 }

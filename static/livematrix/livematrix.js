@@ -1025,7 +1025,7 @@ function te(e, t, o) {
 			});
 		},
 		d = async () => {
-			console.log('wjat...');
+			console.log('LiveMatrix loaded...');
 			let h = JSON.stringify({ author: '0', body: i.greetings });
 			Z.update((D) => [...D, JSON.parse(h)]);
 		},

@@ -23,6 +23,6 @@ onMount(() => {
 #app {
 	right: 0;
 	bottom: 0;
-	width: 24rem;
+	width: 0;
 }
 </style>
