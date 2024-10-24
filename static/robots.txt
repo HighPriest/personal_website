@@ -1,6 +1,5 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Sitemap: https://ghost.amun.pl/sitemap.xml
-Disallow: /ghost/
+Sitemap: https://amun.pl/sitemap.xml
 Disallow: /p/
 Disallow: /email/
