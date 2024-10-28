@@ -18,7 +18,7 @@
 	});
 </script>
 
-<a class="post" data-sveltekit-preload-data="hover" href={`/blog/post/${slug}`}>
+<a class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug}`} href={`/blog/post/${slug}`}>
 	<img loading="lazy" src={feature_image} alt={feature_image_alt} />
 	<div class="post-text">
 		<h1>{title}</h1>

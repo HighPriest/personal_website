@@ -25,7 +25,7 @@
 			<div class="back">
 				<div class="text dynamic-text">
 					{@render contact()}
-					<a href="/blog"><button>{@html m.card_secret_button()}</button></a>
+					<a href="/blog" data-umami-event="Secret Button (Blog)"><button>{@html m.card_secret_button()}</button></a>
 					<!--<p>AMUN Technologie
                     <br>895 224 10 28</p> -->
 				</div>

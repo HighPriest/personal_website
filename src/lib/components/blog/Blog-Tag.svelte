@@ -2,7 +2,7 @@
 	export let name: string, slug: string, feature_image: string, description: string, count: number;
 </script>
 
-<a class="tag" data-sveltekit-preload-data="hover" href={`/blog/tag/${slug}`}>
+<a class="tag" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug}`} href={`/blog/tag/${slug}`}>
 	<img loading="lazy" src={feature_image} alt="Hero" />
 	<div class="post-text">
 		<h2>{name}</h2>
