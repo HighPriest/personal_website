@@ -93,13 +93,13 @@
 		nav {
 			position: fixed;
             display: block;
-			bottom: 0;
-			left: 0;
+			bottom: 1em;
+			left: 24px;
             margin-right: unset;
-			width: 100%;
+			width: calc(100vw - 48px);
             height: auto;
             ul {
-                background-color: var(--tertiary-color);
+                background-color: #00000038;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-evenly;
@@ -108,7 +108,9 @@
                 margin: 0;
                 height: 6rem;
                 width: auto;
-                border-radius: 0;
+                border-radius: 24px;
+                backdrop-filter: blur(5px);
+                box-shadow:none;
                 li {
                     text-align: center;
                     &:hover ~ li{
