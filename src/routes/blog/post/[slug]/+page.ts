@@ -23,14 +23,13 @@ export async function load({ params }) {
 				title: result.data.title || 'No title',
 				slug: result.data.slug,
 				feature_image: result.data.feature_image
-					? result.data.feature_image
-					: 'https://amun.pl/eye-of-ra.webp',
-				feature_image_alt: result.data.feature_image_alt ? result.data.feature_image_alt : '',
+					?? 'https://amun.pl/eye-of-ra.webp',
+				feature_image_alt: result.data.feature_image_alt ?? '',
 				updated_at: result.data.updated_at,
 				tags: result.data.tags!.map((tag) => tag.name),
 				authors: result.data.authors!.map((author) => author.name),
-				excerpt: result.data.excerpt ? result.data.excerpt : '',
-				html: result.data.html ? result.data.html : ''
+				excerpt: result.data.excerpt ?? '',
+				html: result.data.html ?? ''
 			}
 		};
 	} else {

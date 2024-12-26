@@ -18,7 +18,7 @@
 	});
 </script>
 
-<a class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug}`} href={`/blog/post/${slug}`}>
+<a class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/post/${slug}`}>
 	<img loading="lazy" src={feature_image} alt={feature_image_alt} />
 	<div class="post-text">
 		<h1>{title}</h1>
@@ -62,13 +62,7 @@
 			right: 0;
 			bottom: 0;
 			left: 0;
-			background-image: linear-gradient(
-				159deg,
-				var(--tertiary-color) 0%,
-				var(--tertiary-color) 30%,
-				rgba(var(--rgba-tertiary-color), 0.6) 50%,
-				var(--fourth-color) 80%
-			);
+			background-image: linear-gradient(159deg,var(--tertiary-color) 0%,rgba(var(--rgba-tertiary-color),.9) 50%,rgba(var(--rgba-tertiary-color),.6) 90%,var(--fourth-color) 100%);
 			z-index: -1;
 		}
 
