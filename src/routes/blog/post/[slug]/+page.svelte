@@ -1,10 +1,12 @@
-<script>
-	export let data;
+<script lang="ts">
 	import { onMount } from 'svelte';
 	import '$lib/components/Ghost/Post.scss';
 
-	console.log("Post Page Data:");
-	console.log(data);
+	import type { PageData } from "./$types";
+	let { data }: { data: PageData } = $props();
+
+
+	console.log("Post Read data: ", data);
 
 	onMount(() => {
 		const script = document.createElement("script");
@@ -37,8 +39,8 @@
 </svelte:head>
 
 {#await data.post}
-<p>...loading</p>	
-{:then post} 
+<p>...loading</p>
+{:then post}
 <h1>{post?.title ?? ''}</h1>
 {@html post?.html ?? ''}
 {/await}

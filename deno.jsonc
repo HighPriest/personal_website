@@ -12,7 +12,7 @@
     "postbuild": "deno run -A npm:svelte-sitemap --domain https://amun.pl --out-dir build/static"
   },
   "imports": {
-    "@inlang/paraglide-sveltekit": "npm:@inlang/paraglide-sveltekit@0.11.5",
+    "@inlang/paraglide-sveltekit": "npm:@inlang/paraglide-sveltekit@0.15.0",
     "@sveltejs/adapter-auto": "npm:@sveltejs/adapter-auto@3.3.0",
     "@sveltejs/kit": "npm:@sveltejs/kit@2.7.2",
     "@sveltejs/vite-plugin-svelte": "npm:@sveltejs/vite-plugin-svelte@4.0.0",

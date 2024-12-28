@@ -1,11 +1,11 @@
 <script lang="ts">
-	export let data;
-	console.log("Post Layout Data:");
-	console.log(data);
+	import type { LayoutData } from "./$types";
+	import type { Snippet } from 'svelte';
+	let { data, children }: { data: LayoutData, children: Snippet } = $props();
 </script>
 
 <article>
-	<slot />
+	{@render children()}
 </article>
 
 <style>

@@ -1,12 +1,11 @@
-<script>
+<script lang="ts">
 	import Tag from "$lib/components/blog/Blog-Tag.svelte";
 	import Header from "$lib/components/blog/Blog-Header.svelte";
 
-	/** @type {import('./$types').LayoutData} */
-	export let data;
+	import type { PageData } from "./$types";
+	let { data }: { data: PageData } = $props();
 
-	console.log("Blog data: ");
-	console.log(data);
+	console.log("Tags data: ", data);
 </script>
 
 <svelte:head>
@@ -16,8 +15,8 @@
 <Header />
 <h2>Topics</h2>
 <section id="tags">
-{#each data.tags ?? [] as tag}
-	<Tag {...tag} />
+{#each data.tagCards ?? [] as tagCards}
+	<Tag {...tagCards} />
 {/each}
 </section>
 

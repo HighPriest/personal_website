@@ -2,11 +2,13 @@
 	import { page } from "$app/stores";
 	import Post from "$lib/components/blog/Blog-Post.svelte";
 	import Header from "$lib/components/blog/Blog-Header.svelte";
-	export let data;
-    const posts = data.posts?.filter(post => post.tags.some(tag => $page.params.slug === tag));
 
-	console.log("Tag data:");
-	console.log(data);
+	import type { PageData } from "./$types";
+	let { data }: { data: PageData } = $props();
+    //const posts = data.posts?.filter(post => post.tags?.some(tag => $page.params.slug === tag));
+	const posts = data.posts;
+
+	console.log("Post Browse data: ", data);
 </script>
 
 <Header />
