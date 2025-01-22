@@ -1,4 +1,3 @@
-export const prerender = true;
 import type { PageLoad } from "./$types";
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 

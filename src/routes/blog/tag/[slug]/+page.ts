@@ -1,4 +1,3 @@
-export const prerender = true;
 import type { PageLoad } from "./$types";
 import { TSGhostContentAPI, type Post } from "@ts-ghost/content-api";
 
@@ -54,12 +53,12 @@ export const load = (async ({ params }) => {
 
 		if (result.success) {
 			postStore.update(posts => {
-				posts.push(...result.data.filter(post_ => posts.some(post => post.id != post_.id)))
+				// posts.push(...result.data.filter(post_ => posts.some(post => post.id != post_.id)))
 				// Alt approach, which is going to recreate the posts store every time a new tag is hovered
 				// Seems like a cleaner approach, which guarantees new content is always loaded on fetch.
 				// But it is going to be slower in JS & is used after we've already checked for posts existence.
-				// posts = posts.filter(post => post.tags?.some(tag => tag.slug != params.slug));
-				// posts.push(...result.data);
+				posts = posts.filter(post => post.tags?.some(tag => tag.slug != params.slug));
+				posts.push(...result.data);
 				return posts;
 			});
 			return {
