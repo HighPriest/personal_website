@@ -16,15 +16,45 @@
 <h2>Topics</h2>
 <section id="tags">
 {#each data.tagCards ?? [] as tagCards}
-	<Tag {...tagCards} />
+	<Tag {...tagCards}/>
 {/each}
 </section>
 
-<style>
+<style lang="scss">
+/*	@font-face {
+		src: url("https://www.axis-praxis.org/fonts/webfonts/MetaVariableDemo-Set.woff2")
+			format("woff2");
+		font-family: "Meta";
+		font-style: normal;
+		font-weight: normal;
+	}
+	h2 {
+		transition: all 0.5s;
+		-webkit-text-stroke: 2px #d6f4f4;
+		font-variation-settings: "wght" 900, "ital" 1;
+		font-size: 10rem;
+		text-align: center;
+		color: transparent;
+		font-family: "Meta", sans-serif;
+		text-shadow: 10px 10px 0px #07bccc, 15px 15px 0px #e601c8,
+			20px 20px 0px #e9019a, 25px 25px 0px #f40468, 45px 45px 18px #482896;
+		cursor: default;
+		&:hover {
+			font-variation-settings: "wght" 300, "ital" 1;
+			text-shadow: 4px 4px 0px #07bccc;
+		}
+	}*/
+	h2 {
+		font-family: cursive;
+		text-align: left;
+		font-weight: normal;
+		font-size: 5rem;
+		color: var(--heading-color);
+	}
 	#tags {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: center;
 	}
 </style>

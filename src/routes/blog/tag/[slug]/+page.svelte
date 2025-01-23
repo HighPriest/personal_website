@@ -20,6 +20,13 @@
 </section>
 
 <style>
+	h2 {
+		font-family: cursive;
+		text-align: left;
+		font-weight: normal;
+		font-size: 5rem;
+		color: var(--heading-color);
+	}
 	#posts {
 		display: flex;
 		flex-wrap: wrap;
