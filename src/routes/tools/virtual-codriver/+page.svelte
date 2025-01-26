@@ -7,6 +7,15 @@
   let configOutput:string = $state("FilipekMod");
   let configs:MapParsed[] = $derived(data.configsParsed.find((element) => element.name == configOutput)?.maps!);
 
+  let files:FileList | undefined = $state<FileList>();
+
+  $effect(() => {
+    if(files) {
+      for (const file of files) {
+        // TODO: When user presses translate, run translation on files uploaded to user_id
+      }
+    }
+  })
 
   //$: isValid = selectedIdMap !== '' && new_id !== '' && old_id !== '';
   function handleSubmit(event) {
@@ -41,6 +50,28 @@
 <p>CoDriver Download & Pacenotes Converter</p>
 
 <article>
+  <div>
+    <form onsubmit={handleSubmit}>
+      <p>Attach your pacenotes directory</p>
+      <p>The translation process is handled locally<br>None of your files are saved on any server</p>
+      <input
+        bind:files
+        type="file"
+        name="pacenotesToTranslate"
+        id="pacenotesToTranslate"
+        webkitdirectory
+        multiple>
+      <br><br>
+      <!--TODO: Create configuration parsing in JavaScript-->
+      <!--<button type="submit">Load Config</button>-->
+      <button type="submit">Translate</button>
+    </form>
+    <ul id="pacenotesListing">
+      {#each Array.from(files ?? []) as pacenoteFile}
+        <li>{pacenoteFile.name}</li>
+      {/each}
+    </ul>
+  </div>
 
 	<aside id="map-of-values">
 		<form action="" method="post">
