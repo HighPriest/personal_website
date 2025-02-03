@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import type { PageServerLoad } from './$types';
 
 // TODO: Make user send their configuration
 // Export pacenote names & ids from that configuration
@@ -11,9 +12,9 @@ export type Map = {
 	old_category: string;
 	old_pacenote: string;
 	old_id: number;
-	new_category: string;
-	new_pacenote: string;
-	new_id: number;
+	new_category: string[];
+	new_pacenote: string[];
+	new_id: number[];
 };
 
 export type MapContainer = {
@@ -33,7 +34,7 @@ export type ConfigContainer = {
 	maps: MapContainer[];
 };
 
-export const load = async () => {
+export const load: PageServerLoad = async () => {
 	// Function for parsing CSV files into arrays
 	const parseMapCsv = (csv: string) => {
 		var allTextLines = csv.split(/\r\n|\n|\r/);
@@ -47,9 +48,9 @@ export const load = async () => {
 					old_category: data[0],
 					old_id: parseInt(data[1]),
 					old_pacenote: data[2],
-					new_category: data[3],
-					new_id: parseInt(data[4]),
-					new_pacenote: data[5],
+					new_category: data[3].split('+'),
+					new_id: data[4].split('+').map(Number),
+					new_pacenote: data[5].split('+'),
 				};
 				lines.push(tarr);
 			}
