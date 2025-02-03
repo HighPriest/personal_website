@@ -81,14 +81,26 @@ export const load = async () => {
 			path.resolve('static/codriver/FilipekMod/OriginalToFilipek.csv'),
 			fs.readFileSync(path.resolve('static/codriver/FilipekMod/OriginalToFilipek.csv'), 'utf-8')
 		],
+		DarrenV2ToFilipek: [
+			path.resolve('static/codriver/FilipekMod/DarrenV2ToFilipek.csv'),
+			fs.readFileSync(path.resolve('static/codriver/FilipekMod/DarrenV2ToFilipek.csv'), 'utf-8')
+		],
+		Handwerker12ToFilipek: [
+			path.resolve('static/codriver/FilipekMod/Handwerker1.2ToFilipek.csv'),
+			fs.readFileSync(path.resolve('static/codriver/FilipekMod/Handwerker12ToFilipek.csv'), 'utf-8')
+		],
+		Handwerker14ToFilipek: [
+			path.resolve('static/codriver/FilipekMod/Handwerker1.4ToFilipek.csv'),
+			fs.readFileSync(path.resolve('static/codriver/FilipekMod/Handwerker14ToFilipek.csv'), 'utf-8')
+		],
 		LuppisV2ToFilipek: [
 			path.resolve('static/codriver/FilipekMod/LuppisV2ToFilipek.csv'),
 			fs.readFileSync(path.resolve('static/codriver/FilipekMod/LuppisV2ToFilipek.csv'), 'utf-8')
-		], // TODO: Parse Handwerker 1.4 once again to Excel
+		],
 		LuppisV3ToFilipek: [
 			path.resolve('static/codriver/FilipekMod/LuppisV3ToFilipek.csv'),
 			fs.readFileSync(path.resolve('static/codriver/FilipekMod/LuppisV3ToFilipek.csv'), 'utf-8')
-		] // TODO: Parse Janne configs once again to Excel
+		]
 	};
 	const configFiles = {
 		FilipekMod: [
@@ -98,6 +110,18 @@ export const load = async () => {
 		Original: [
 			path.resolve('static/codriver/Original/config.csv'),
 			fs.readFileSync(path.resolve('static/codriver/Original/config.csv'), 'utf-8')
+		],
+		DarrenV2: [
+			path.resolve('static/codriver/DarrenV2/config.csv'),
+			fs.readFileSync(path.resolve('static/codriver/DarrenV2/config.csv'), 'utf-8')
+		],
+		Handwerker12: [
+			path.resolve('static/codriver/Handwerker12/config.csv'),
+			fs.readFileSync(path.resolve('static/codriver/Handwerker12/config.csv'), 'utf-8')
+		],
+		Handwerker14: [
+			path.resolve('static/codriver/Handwerker14/config.csv'),
+			fs.readFileSync(path.resolve('static/codriver/Handwerker14/config.csv'), 'utf-8')
 		],
 		LuppisV2: [
 			path.resolve('static/codriver/LuppisV2/config.csv'),
@@ -113,6 +137,18 @@ export const load = async () => {
 		{
 			name: 'OriginalToFilipek',
 			map: parseMapCsv(mapsFiles['OriginalToFilipek'][1])
+		},
+		{
+			name: 'DarrenV2ToFilipek',
+			map: parseMapCsv(mapsFiles['DarrenV2ToFilipek'][1])
+		},
+		{
+			name: 'Handwerker12ToFilipek',
+			map: parseMapCsv(mapsFiles['Handwerker12ToFilipek'][1])
+		},
+		{
+			name: 'Handwerker14ToFilipek',
+			map: parseMapCsv(mapsFiles['Handwerker14ToFilipek'][1])
 		},
 		{
 			name: 'LuppisV2ToFilipek',
@@ -134,6 +170,18 @@ export const load = async () => {
 					map: parseMapCsv(mapsFiles['OriginalToFilipek'][1])
 				},
 				{
+					name: 'DarrenV2',
+					map: parseMapCsv(mapsFiles['DarrenV2ToFilipek'][1])
+				},
+				{
+					name: 'Handwerker12',
+					map: parseMapCsv(mapsFiles['Handwerker12ToFilipek'][1])
+				},
+				{
+					name: 'Handwerker14',
+					map: parseMapCsv(mapsFiles['Handwerker14ToFilipek'][1])
+				},
+				{
 					name: 'LuppisV2',
 					map: parseMapCsv(mapsFiles['LuppisV2ToFilipek'][1])
 				},
@@ -146,6 +194,21 @@ export const load = async () => {
 		{
 			name: 'Original',
 			config: parseConfigCsv(configFiles['Original'][1]),
+			maps: []
+		},
+		{
+			name: 'DarrenV2',
+			config: parseConfigCsv(configFiles['DarrenV2'][1]),
+			maps: []
+		},
+		{
+			name: 'Handwerker12',
+			config: parseConfigCsv(configFiles['Handwerker12'][1]),
+			maps: []
+		},
+		{
+			name: 'Handwerker14',
+			config: parseConfigCsv(configFiles['Handwerker14'][1]),
 			maps: []
 		},
 		{

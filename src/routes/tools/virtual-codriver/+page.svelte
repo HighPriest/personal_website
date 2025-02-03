@@ -77,7 +77,7 @@
       .catch(error => {
         console.error('Error loading config: ', error);
       });
-    }*/
+    }
   })
 
   async function handleSubmit(event) {
