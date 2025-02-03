@@ -16,7 +16,7 @@ export type Map = {
 	new_id: number;
 };
 
-export type MapParsed = {
+export type MapContainer = {
 	name: string;
 	map: Map[];
 };
@@ -27,13 +27,10 @@ export type Config = {
 	slot: string;
 };
 
-export type ConfigParsed = {
+export type ConfigContainer = {
 	name: string;
 	config: Config[];
-	maps: {
-		name: string;
-		map: Map[];
-	}[];
+	maps: MapContainer[];
 };
 
 export const load = async () => {
@@ -41,18 +38,18 @@ export const load = async () => {
 	const parseMapCsv = (csv: string) => {
 		var allTextLines = csv.split(/\r\n|\n|\r/);
 		var headers = allTextLines[0].split(',');
-		var lines = [];
+		var lines = []; // TODO: If I only ever query maps by id_old, turn these into Map<number, the rest of content>
 
 		for (var i = 1; i < allTextLines.length; i++) {
 			var data = allTextLines[i].split(',');
 			if (data.length == headers.length) {
 				var tarr: Map = {
 					old_category: data[0],
-					old_pacenote: data[1],
-					old_id: parseInt(data[2]),
+					old_id: parseInt(data[1]),
+					old_pacenote: data[2],
 					new_category: data[3],
-					new_pacenote: data[4],
-					new_id: parseInt(data[5])
+					new_id: parseInt(data[4]),
+					new_pacenote: data[5],
 				};
 				lines.push(tarr);
 			}
@@ -69,8 +66,8 @@ export const load = async () => {
 			if (data.length == headers.length) {
 				var tarr: Config = {
 					category: data[0],
-					slot: data[1],
-					id: parseInt(data[2])
+					id: parseInt(data[1]),
+					slot: data[2],
 				};
 				lines.push(tarr);
 			}
@@ -112,7 +109,7 @@ export const load = async () => {
 		]
 	};
 
-	const mapsParsed: MapParsed[] = [
+	const mapsParsed: MapContainer[] = [
 		{
 			name: 'OriginalToFilipek',
 			map: parseMapCsv(mapsFiles['OriginalToFilipek'][1])
@@ -127,7 +124,7 @@ export const load = async () => {
 		}
 	];
 
-	const configsParsed: ConfigParsed[] = [
+	const configsParsed: ConfigContainer[] = [
 		{
 			name: 'FilipekMod',
 			config: parseConfigCsv(configFiles['FilipekMod'][1]),

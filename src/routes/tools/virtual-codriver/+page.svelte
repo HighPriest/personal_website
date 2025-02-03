@@ -1,28 +1,117 @@
 <script lang="ts">
-  import { type Map, type MapParsed, type Config, type ConfigParsed } from './+page.server.ts';
+  import { type Map, type MapContainer, type Config, type ConfigContainer } from './+page.server.ts';
   import type { PageProps } from "./$types";
   let { data }: PageProps = $props();
 
-  let configInput:string = $state("Original");
-  let configOutput:string = $state("FilipekMod");
-  let configs:MapParsed[] = $derived(data.configsParsed.find((element) => element.name == configOutput)?.maps!);
+  import { handleTranslation } from './translation_script.ts';
 
-  let files:FileList | undefined = $state<FileList>();
+  interface Settings {
+    from: {
+      name: string;
+      config?: Config[]
+    };
+    to: {
+      name: string;
+      config?: Config[]
+    }
+  }
+
+  let settings:Settings = $state({
+    from: {
+      name: "Original",
+    },
+    to: {
+      name: "FilipekMod",
+    },
+  });
+  let filesPacenotes:FileList | undefined = $state<FileList>();
+  let filesConfig:FileList | undefined = $state<FileList>();
+  let zipElement: HTMLAnchorElement;
+
+  let configs = $derived({
+    from: data.configsParsed.find((element) => element.name == settings.from.name)?.config,
+    to: data.configsParsed.find((element) => element.name == settings.to.name)?.config
+  })
+  let maps:MapContainer[] = $derived(data.configsParsed.find((element) => element.name == settings.to.name)?.maps!);
+  let mapPacenoteNames: { [old_pacenote: string]: string} = {};
+
+  let _currentNote:string | undefined;
 
   $effect(() => {
-    if(files) {
-      for (const file of files) {
-        // TODO: When user presses translate, run translation on files uploaded to user_id
+    if(filesPacenotes) {
+      const formData = new FormData();
+      formData.append('state', 'load');
+      for (const file of filesPacenotes) {
+        formData.append('pacenotes', file);
       }
+
+      fetch('/api/virtual-codriver', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Pacenotes loaded: ', data);
+      })
+      .catch(error => {
+        console.error('Error loading pacenotes: ', error);
+      });
     }
+    if(filesConfig) {
+      // TODO: Leave parsing config for later.
+          // It is going to require inclusion of ini parser on client side & some replacement functions. Let's handle it in future stages
+      const formData = new FormData();
+      formData.append('state', 'load');
+      for (const file of filesConfig) {
+        formData.append('config', file);
+      }
+
+      fetch('/api/virtual-codriver', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Config loaded: ', data);
+      })
+      .catch(error => {
+        console.error('Error loading config: ', error);
+      });
+    }*/
   })
 
-  //$: isValid = selectedIdMap !== '' && new_id !== '' && old_id !== '';
-  function handleSubmit(event) {
-    // TODO: Instead of handleSubmit, we are going to need to use bind on the submit button
+  async function handleSubmit(event) {
     event.preventDefault();
-    //if (!isValid) return;
-    return;
+    let map_id = maps.find((element) => element.name == settings.from.name)?.map
+
+    try {
+      // Validate file upload, map existence & some selection being made for settings.from & settings to
+      if(!filesPacenotes || !map_id || !settings.from.name || !settings.to.name) {
+        throw new Error('Missing required fields');
+      };
+
+      // Validate that all pacenotes have valid mappings
+      const isValid = configs.from!.every(element => {
+          return configs.to?.some(config => 
+              config.slot === mapPacenoteNames[element.slot]
+          ) ?? false;
+      });
+      if (!isValid) {
+          throw new Error('Invalid or missing pacenote mappings detected');
+      }
+    } catch (error) {
+      console.error('Validation failed:', error);
+      return;
+    }
+
+    await handleTranslation(filesPacenotes, map_id, mapPacenoteNames, settings.to.name)
+      .then((blob) => {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "translated_pacenotes.zip";
+        link.text = "Download translated pacenotes!";
+        zipElement.replaceWith(link);
+      });
 
     // Proceed with form submission
     // console.log('Form submitted:', { selectedIdMap, newValue, oldValue });
@@ -55,7 +144,7 @@
       <p>Attach your pacenotes directory</p>
       <p>The translation process is handled locally<br>None of your files are saved on any server</p>
       <input
-        bind:files
+        bind:files={filesPacenotes}
         type="file"
         name="pacenotesToTranslate"
         id="pacenotesToTranslate"
@@ -65,56 +154,79 @@
       <!--TODO: Create configuration parsing in JavaScript-->
       <!--<button type="submit">Load Config</button>-->
       <button type="submit">Translate</button>
+      <a aria-label="Download zip output button" href="./virtual-codriver" bind:this={zipElement}></a>
     </form>
     <ul id="pacenotesListing">
-      {#each Array.from(files ?? []) as pacenoteFile}
+      {#each Array.from(filesPacenotes ?? []) as pacenoteFile}
         <li>{pacenoteFile.name}</li>
       {/each}
     </ul>
   </div>
 
 	<aside id="map-of-values">
-		<form action="" method="post">
-      <div>
-        <p>Translate from:</p>
-        <select name="configInput" id="configInput"
-                bind:value={configInput} class:invalid={!configInput}>
-              {#each configs as config}
-                <option value="{config.name}">{config.name}</option>
-              {/each}
-        </select>
-      </div>
-      <div>
-        <p>Translate to:</p>
-        <select name="configOutput" id="configOutput"
-                bind:value={configOutput} class:invalid={!configOutput}>
-              {#each data.configsParsed as config}
-                <option value="{config.name}">{config.name}</option>
-              {/each}
-        </select>
-      </div>
-			<p>Map of Values</p>
-      {#each data.configsParsed.find((element) => element.name == configOutput)?.maps.find((element) => element.name == configInput)?.map ?? [] as map}
-      <div>
-        <!-- TODO: As NAME, attach polish translations to old_pacenote, so it is easier for people to find stuff out -->
-        <!-- TODO: Maybe also attach translation to new_pacenote & display it -->
-        <input
-            type="text"
-            list="id_new" 
-            name={map.old_pacenote}
-            id=""
-            value={map.old_pacenote}/>
-            <!-- TODO: Write validation, so no row is empty -->
-        => {map.new_pacenote}
-      </div>
-      <br>
+    <div>
+      <!-- TODO: Add a hover notice, that it might be difficult to map your own config -->
+      <!-- TODO: Handle user config parsing later. It is not worth the hustle for now
+      <p>Upload your current config:</p>
+      <input
+        bind:files={filesConfig}
+        type="file"
+        name="configToParse"
+        id="configToParse"
+        
+        webkitdirectory
+        multiple>
+    </div>
+    <br>-->
+    <div>
+      <p>Translate from:</p>
+      <select name="configInput" id="configInput"
+              bind:value={settings.from.name} class:invalid={!settings.from.name}>
+            {#each maps as config}
+              <option value="{config.name}">{config.name}</option>
+            {/each}
+      </select>
+    </div>
+    <div>
+      <p>Translate to:</p>
+      <select name="configOutput" id="configOutput"
+              bind:value={settings.to.name} class:invalid={!settings.to.name}>
+            {#each data.configsParsed as config}
+              <option value="{config.name}">{config.name}</option>
+            {/each}
+      </select>
+    </div>
+    <p>Map of Values</p>
+    <!-- Stwórz linijkę dla każdego translate from -->
+    <!-- Daj możliwość zmiany Translate to -->
+    <!-- List opcji ma być dla Translate to -->
+    {#each configs.from! as pacenote}
+    {#if !isNaN(pacenote.id)}
+    {#if _currentNote = maps.find((element) => element.name == settings.from.name)?.map.find((element) => element.old_pacenote == pacenote.slot)?.new_pacenote}
+      {(void (mapPacenoteNames[pacenote.slot] = _currentNote))}
+    {/if}
+    <div>
+      <!-- TODO: As NAME, attach polish translations to old_pacenote, so it is easier for people to find stuff out -->
+      <!-- TODO: Maybe also attach translation to new_pacenote & display it -->
+      <span> {pacenote.slot + " => "} </span>
+      <input
+      type="text"
+      list="id_new"
+      bind:value={mapPacenoteNames[pacenote.slot]}
+      name={pacenote.id}
+      id={pacenote.slot + "_" + pacenote.id}
+      /> 
+      <!-- TODO: Write validation, so no row is empty -->
+    </div>
+    <br>
+    {/if}
+    {(void (_currentNote = undefined))}
+    {/each}
+    <datalist id="id_new">
+      {#each data.configsParsed.find((element) => element.name == settings.to.name)?.config.sort(sortingConfig) ?? [] as config}
+        <option value={config.slot}></option>
       {/each}
-			<datalist id="id_new">
-        {#each data.configsParsed.find((element) => element.name == configInput)?.config.sort(sortingConfig) ?? [] as config}
-				  <option value={config.slot}></option>
-        {/each}
-			</datalist>
-		</form>
+    </datalist>
 	</aside>
 </article>
 
