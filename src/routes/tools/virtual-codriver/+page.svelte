@@ -8,8 +8,12 @@
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 
-  import Modal from '$lib/components/Modal.svelte';
-  let modalContents: string | undefined = $state(undefined);
+	import * as m from '$lib/paraglide/messages.js';
+
+	import { Button } from 'wx-svelte-core';
+	import Dropzone from 'svelte-file-dropzone';
+	import Modal from '$lib/components/Modal.svelte';
+	let modalContents: string | undefined = $state(undefined);
 
 	import { handleTranslation } from './translation_script.ts';
 
@@ -32,8 +36,15 @@
 			name: 'FilipekMod'
 		}
 	});
-	let filesPacenotes: FileList | undefined = $state<FileList>();
-	let filesConfig: FileList | undefined = $state<FileList>();
+	type FileState = { accepted: File[]; rejected: File[] };
+	let filesPacenotes: FileState = $state({
+		accepted: [],
+		rejected: []
+	});
+	let filesConfig: FileState = $state({
+		accepted: [],
+		rejected: []
+	});
 	let zipElement: HTMLAnchorElement;
 
 	let configs = $derived({
@@ -48,10 +59,10 @@
 	let _currentNote: string[] | undefined;
 
 	$effect(() => {
-		if (filesPacenotes) {
+		if (filesPacenotes.accepted) {
 			const formData = new FormData();
 			formData.append('state', 'load');
-			for (const file of filesPacenotes) {
+			for (const file of filesPacenotes.accepted) {
 				formData.append('pacenotes', file);
 			}
 
@@ -72,7 +83,7 @@
 			// It is going to require inclusion of ini parser on client side & some replacement functions. Let's handle it in future stages
 			const formData = new FormData();
 			formData.append('state', 'load');
-			for (const file of filesConfig) {
+			for (const file of filesConfig.accepted) {
 				formData.append('config', file);
 			}
 
@@ -90,57 +101,75 @@
 		}
 	});
 
-  function handleSave() {
-    let new_maps: Map[] = [];
+	function handlePacenoteFilesUpload(event: {
+		detail: { acceptedFiles: File[]; fileRejections: File[] };
+	}) {
+		const { acceptedFiles, fileRejections } = event.detail;
 
-      // Update for each value in config from
-      configs.from?.forEach((pacenote) => {
-        // Check if the id is of a usable thing. Not some pacenote which doesn't have an id
-        if (!isNaN(pacenote.id)) {
-          let temp = "";
-          // If the old_pacenote has a mapping in pacenotenames (they always should)
-          if (temp = mapPacenoteNames[pacenote.slot]) {
-            const sourceMap = maps.find((element) => element.name === settings.from.name)!.map // These values need to exist, because we are accessign them, because we have read them before  
-            const old_map = sourceMap.find((element) => element.old_pacenote === pacenote.slot); // These values might not exist before in the map
-                               
-            // Generate a completely new map
-            const new_map = {
-              old_category: pacenote.category,
-              old_id: pacenote.id,
-              old_pacenote: pacenote.slot,
-              // Take each pacenote, separated by +
-              // map all these pacenote texts, to ids from "config.to"
-              // filter out undefineds.
-              // TODO: Now that I think about it. It shouldn't happen that we don't match some value.
-              // Also add try, catch with modal error here, when values are missing in config.to. 
-              // Just in case the user has put in wrong value & we have not caught it before
-              new_category: temp.split('+').map((note) => configs.to?.find((value) => value.slot === note)?.category).filter(category => category !== undefined),
-              new_id: temp.split('+').map((note) => configs.to?.find((value) => value.slot === note)?.id).filter(id => id !== undefined),
-              new_pacenote: temp.split('+').map((note) => configs.to?.find((value) => value.slot === note)?.slot).filter(slot => slot !== undefined)
-            }
+		filesPacenotes.accepted = [...filesPacenotes.accepted, ...acceptedFiles];
+		filesPacenotes.rejected = [...filesPacenotes.rejected, ...fileRejections];
+	}
 
-            /*if (old_map != undefined) {
+	function handleSave() {
+		let new_maps: Map[] = [];
+
+		// Update for each value in config from
+		configs.from?.forEach((pacenote) => {
+			// Check if the id is of a usable thing. Not some pacenote which doesn't have an id
+			if (!isNaN(pacenote.id)) {
+				let temp = '';
+				// If the old_pacenote has a mapping in pacenotenames (they always should)
+				if ((temp = mapPacenoteNames[pacenote.slot])) {
+					const sourceMap = maps.find((element) => element.name === settings.from.name)!.map; // These values need to exist, because we are accessign them, because we have read them before
+					const old_map = sourceMap.find((element) => element.old_pacenote === pacenote.slot); // These values might not exist before in the map
+
+					// Generate a completely new map
+					const new_map = {
+						old_category: pacenote.category,
+						old_id: pacenote.id,
+						old_pacenote: pacenote.slot,
+						// Take each pacenote, separated by +
+						// map all these pacenote texts, to ids from "config.to"
+						// filter out undefineds.
+						// TODO: Now that I think about it. It shouldn't happen that we don't match some value.
+						// Also add try, catch with modal error here, when values are missing in config.to.
+						// Just in case the user has put in wrong value & we have not caught it before
+						new_category: temp
+							.split('+')
+							.map((note) => configs.to?.find((value) => value.slot === note)?.category)
+							.filter((category) => category !== undefined),
+						new_id: temp
+							.split('+')
+							.map((note) => configs.to?.find((value) => value.slot === note)?.id)
+							.filter((id) => id !== undefined),
+						new_pacenote: temp
+							.split('+')
+							.map((note) => configs.to?.find((value) => value.slot === note)?.slot)
+							.filter((slot) => slot !== undefined)
+					};
+
+					/*if (old_map != undefined) {
               Object.assign(old_map, new_map);
             } else {
               sourceMap.push(new_map);
             }*/
-           new_maps.push(new_map);
-            // Update current map
-          }
-        }
-      })
+					new_maps.push(new_map);
+					// Update current map
+				}
+			}
+		});
 
-      return new_maps;
-  }
+		return new_maps;
+	}
 
 	async function handleSubmit(event) {
 		event.preventDefault();
 
-    // Find a relevant map, from the "from" list
-    // When I am going to handle importing configs, the "Personal config" is going to be added to the FROM list. So, this is going to work fine.
-    let map = handleSave();
+		// Find a relevant map, from the "from" list
+		// When I am going to handle importing configs, the "Personal config" is going to be added to the FROM list. So, this is going to work fine.
+		let map = handleSave();
 
-    let missing_map;
+		let missing_map;
 		try {
 			// Validate file upload, map existence & some selection being made for settings.from & settings to
 			if (!filesPacenotes || !map || !settings.from.name || !settings.to.name) {
@@ -149,32 +178,40 @@
 
 			// Validate that all pacenotes have valid mappings
 			const isValid = configs.from!.every((element) => {
-        missing_map = element.slot;
+				missing_map = element.slot;
 				return (
-					configs.to?.some((config) => config.slot.localeCompare(mapPacenoteNames[element.slot].split('+').pop()!, undefined, { sensitivity: 'accent'})) ?? false
-          // TODO: Make sure this doesn't error out on split. Instead, throws a valid error on value missing.
+					configs.to?.some((config) =>
+						config.slot.localeCompare(mapPacenoteNames[element.slot].split('+').pop()!, undefined, {
+							sensitivity: 'accent'
+						})
+					) ?? false
+					// TODO: Make sure this doesn't error out on split. Instead, throws a valid error on value missing.
 				);
 			});
 			if (!isValid) {
 				throw new Error('Invalid or missing pacenote mappings detected');
 			}
 		} catch (error) {
-      // TODO: Add a modal about missing map.
-      modalContents = 'Validation failed<br>Last checked element: ' + missing_map;
-      console.error('Last checked element:', missing_map);
+			// TODO: Add a modal about missing map.
+			modalContents = 'Validation failed<br>Last checked element: ' + missing_map;
+			console.error('Last checked element:', missing_map);
 			console.error('Validation failed: ', error);
 			return;
 		}
 
-		await handleTranslation(filesPacenotes, map, /*mapPacenoteNames,*/ settings.to.name).then(
-			(blob) => {
-				const link = document.createElement('a');
-				link.href = URL.createObjectURL(blob);
-				link.download = 'translated_pacenotes.zip';
-				link.text = 'Download translated pacenotes!';
-				zipElement.replaceWith(link);
-			}
-		);
+		await handleTranslation(
+			filesPacenotes.accepted,
+			map,
+			/*mapPacenoteNames,*/ settings.to.name
+		).then((blob) => {
+			const link = document.createElement('a');
+			link.href = URL.createObjectURL(blob);
+			link.className = "wx-button wx-secondary";
+			link.style = "font-size: 2em; font-weight: bold";
+			link.download = 'translated_pacenotes.zip';
+			link.text = m.codriver_translator_download();
+			zipElement.replaceWith(link);
+		});
 	}
 
 	/*
@@ -195,34 +232,38 @@
 </script>
 
 {#if modalContents}
-  <Modal message = {modalContents} onClose = {() => modalContents = undefined}/>
+	<Modal message={modalContents} onClose={() => (modalContents = undefined)} />
 {/if}
 
 <h1>Virtual CoDriver</h1>
-<p>CoDriver Download & Pacenotes Converter</p>
 
 <article>
 	<div>
+		<p>{@html m.codriver_translator_subtitle()}</p>
 		<form onsubmit={handleSubmit}>
-			<p>Attach your pacenotes directory <br> e.g. <code>RBR\Plugins\NGPCarMenu\MyPacenotes</code></p>
-			<input
+			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
+			<!-- TODO: Make it also accept individual files -->
+			<Dropzone on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true}>
+				{@html m.codriver_translator_upload_box()}
+			</Dropzone>
+			<!--<input
 				bind:files={filesPacenotes}
 				type="file"
 				name="pacenotesToTranslate"
 				id="pacenotesToTranslate"
 				webkitdirectory
 				multiple
-			/>
+			/>-->
 			<br /><br />
 			<!--TODO: Create configuration parsing in JavaScript-->
 			<!-- When configuration is uploaded, just create a new translate from map, without anything on output -->
 			<!--<button type="submit">Load Config</button>-->
-			<button type="submit">Translate</button>
+			<Button type={'primary'}>{@html m.codriver_translator_translate()}</Button>
 			<a aria-label="Download zip output button" href="./virtual-codriver" bind:this={zipElement}
 			></a>
 		</form>
 		<ul id="pacenotesListing">
-			{#each Array.from(filesPacenotes ?? []) as pacenoteFile}
+			{#each filesPacenotes.accepted as pacenoteFile}
 				<li>{pacenoteFile.name}</li>
 			{/each}
 		</ul>
@@ -243,67 +284,72 @@
         multiple>
     </div>
     <br>-->
-			<div>
-				<p>Translate from:</p>
-				<select
-					name="configInput"
-					id="configInput"
-					bind:value={settings.from.name}
-					class:invalid={!settings.from.name}
-				>
-					{#each maps as config}
-						<option value={config.name}>{config.name}</option>
-					{/each}
-				</select>
+			<div class="inline">
+				<div>
+					<p>{@html m.codriver_translator_translate_from()}</p>
+					<select
+						name="configInput"
+						id="configInput"
+						bind:value={settings.from.name}
+						class:invalid={!settings.from.name}
+					>
+						{#each maps as config}
+							<option value={config.name}>{config.name}</option>
+						{/each}
+					</select>
+				</div>
+				<div>
+					<p>{@html m.codriver_translator_translate_to()}</p>
+					<select
+						name="configOutput"
+						id="configOutput"
+						bind:value={settings.to.name}
+						class:invalid={!settings.to.name}
+					>
+						{#each data.configsParsed as config}
+							<option value={config.name}>{config.name}</option>
+						{/each}
+					</select>
+				</div>
 			</div>
-			<div>
-				<p>Translate to:</p>
-				<select
-					name="configOutput"
-					id="configOutput"
-					bind:value={settings.to.name}
-					class:invalid={!settings.to.name}
-				>
-					{#each data.configsParsed as config}
-						<option value={config.name}>{config.name}</option>
-					{/each}
-				</select>
-			</div>
-			<p>Map of Values</p>
-			<!-- Tworzy linijkę dla każdego translate config.from -->
-			<!-- Daje możliwość zmiany wartości Translate to -->
-			<!-- Datalist opcji jest brany z Translate to -->
-			{#each configs.from! as pacenote}
-				{#if !isNaN(pacenote.id)}
-					{#if (_currentNote = maps
-						.find((element) => element.name == settings.from.name)
-						 ?.map.find((element) => element.old_id == pacenote.id)?.new_pacenote)}
-              {void (mapPacenoteNames[pacenote.slot] = _currentNote.join('+'))}
+			<div class="inline">
+				<br />
+				<h3>{@html m.codriver_translator_map()}</h3>
+				<!-- Tworzy linijkę dla każdego translate config.from -->
+				<!-- Daje możliwość zmiany wartości Translate to -->
+				<!-- Datalist opcji jest brany z Translate to -->
+				{#each configs.from! as pacenote}
+					{#if !isNaN(pacenote.id)}
+						{#if (_currentNote = maps
+							.find((element) => element.name == settings.from.name)
+							?.map.find((element) => element.old_id == pacenote.id)?.new_pacenote)}
+							{void (mapPacenoteNames[pacenote.slot] = _currentNote.join('+'))}
+						{/if}
+						<div>
+							<span> {pacenote.slot} => </span>
+							<input
+								type="text"
+								list="id_new"
+								bind:value={mapPacenoteNames[pacenote.slot]}
+								name={pacenote.id.toString()}
+								id={pacenote.slot + '_' + pacenote.id}
+							/>
+							<!-- TODO: Add visual validation, so no row is empty -->
+						</div>
+						<br />
 					{/if}
-					<div>
-						<span> {pacenote.slot + ' => '} </span>
-						<input
-							type="text"
-							list="id_new"
-							bind:value={mapPacenoteNames[pacenote.slot]}
-							name={pacenote.id.toString()}
-							id={pacenote.slot + '_' + pacenote.id}
-						/>
-						<!-- TODO: Add visual validation, so no row is empty -->
-					</div>
-					<br />
-				{/if}
-				{void (_currentNote = undefined)}
-			{/each}
-			<datalist id="id_new">
-				{#each data.configsParsed
-					.find((element) => element.name == settings.to.name)
-					?.config.sort(sortingConfig) ?? [] as config}
-					<option value={config.slot}></option>
-          <!-- TODO: As NAME, attach polish translations to new_pacenote, so it is easier for people to find stuff out -->
-          <!-- This requires augmenting config files with translations -->
+					{void (_currentNote = undefined)}
 				{/each}
-			</datalist>
+				<datalist id="id_new">
+					{#each data.configsParsed
+						.find((element) => element.name == settings.to.name)
+						?.config.sort(sortingConfig) ?? [] as config}
+						<option value={config.slot}></option>
+						<!-- TODO: As NAME, attach polish translations to new_pacenote, so it is easier for people to find stuff out -->
+						<!-- This requires augmenting config files with translations -->
+					{/each}
+				</datalist>
+			</div>
 		</div>
 	</aside>
 </article>
@@ -312,11 +358,16 @@
 	article {
 		display: flex;
 		flex-direction: row;
+		aside {
+			margin-left: 10em;
+		}
 	}
 
 	#map-of-values {
-		div {
-			display: inline-block;
+		.inline {
+			div {
+				display: inline-block;
+			}
 		}
 	}
 </style>

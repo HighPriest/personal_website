@@ -138,7 +138,7 @@ const standardMap: Record<string, number> = {
     "OVER_CREST": 16, 
 };
 
-export async function handleTranslation(files: FileList, idsMap: Map[], targetStandard: String): Promise<Blob> {
+export async function handleTranslation(files: File[], idsMap: Map[], targetStandard: String): Promise<Blob> {
     const zip = new JSZip(); // Start archive creation for download
 
     // ?? IN OG SCRIPT: Get list of pacenote files for eachstage
@@ -148,7 +148,7 @@ export async function handleTranslation(files: FileList, idsMap: Map[], targetSt
     });
 
     // Iterate over individual pacenote files
-    for (const file of Array.from(files)) {
+    for (const file of files) {
         // Load contents of the original INI file
         const fileContent = await file.text();
         const iniData = ini.parse(fileContent);
@@ -192,7 +192,6 @@ export async function handleTranslation(files: FileList, idsMap: Map[], targetSt
             // Notify user that their Pacenotes are using IDs which were not found in the configuration.
             // Tell user which ID it is & tell them to check if this ID plays in-game
             if (idsMapObject.has(pacenote)) { // Check if there is a map available
-                debugger;
                 idsMapObject.get(pacenote)?.forEach((id) => {
                     filteredData["P" + pCounter] = data;
                     filteredData["P" + pCounter] = createPacenote(id, distance, standard, flag);
@@ -211,7 +210,10 @@ export async function handleTranslation(files: FileList, idsMap: Map[], targetSt
         const outputContent = `; ${file.name} pacenotes file generated for CoPilot mods compatible with ${targetStandard} \n`
         + "; For more details, please visit https://amun.pl/tools/virtual-codriver \n\n"
         + ini.stringify(filteredData, { whitespace: true, platform: "win32" });
-        zip.file(file.webkitRelativePath, outputContent);
+        // We are only handling .ini files, so this is fine
+        // TODO: This should be webkitRelativePath, but the guys from svelte-file-dropzone fucked up
+        // Relevant thread https://github.com/thecodejack/svelte-file-dropzone/issues/169
+        zip.file(file.path.replace(".ini","_"+targetStandard+".ini"), outputContent);
 
         console.log(`Processed: `, file.name);
     }
