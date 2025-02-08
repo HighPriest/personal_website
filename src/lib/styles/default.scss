@@ -1,0 +1,259 @@
+/* Todo: Define color styles */
+/*:global(body) { margin: 0; line-height: 1.5; color: #8c8c8e; } */
+/*
+==========================================================================
+#FONT
+==========================================================================
+*/
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src: url('/fonts/Inter-Italic.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: italic;
+	font-weight: 600;
+	font-display: swap;
+	src: url('/fonts/Inter-SemiBoldItalic.woff2') format('woff2');
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* main */
+		--color-primary-darker: hsl(52, 100%, 34%);
+		--color-primary-dark: hsl(52, 100%, 40%);
+		--color-primary: hsl(52, 100%, 46%);
+		--color-primary-light: hsl(52, 100%, 52%);
+		--color-primary-lighter: hsl(52, 100%, 58%);
+		--color-accent-darker: hsl(187, 98%, 36%);
+		--color-accent-dark: hsl(187, 98%, 42%);
+		--color-accent: hsl(187, 98%, 48%);
+		--color-accent-light: hsl(187, 98%, 54%);
+		--color-accent-lighter: hsl(187, 98%, 60%);
+		--color-black: hsl(230, 13%, 9%);
+		--color-white: hsl(0, 0%, 100%);
+
+		/* feedback */
+		--color-warning-darker: hsl(35, 79%, 48%);
+		--color-warning-dark: hsl(35, 79%, 56%);
+		--color-warning: hsl(35, 79%, 66%);
+		--color-warning-light: hsl(35, 79%, 74%);
+		--color-warning-lighter: hsl(35, 79%, 82%);
+		--color-success-darker: hsl(170, 78%, 26%);
+		--color-success-dark: hsl(170, 78%, 31%);
+		--color-success: hsl(170, 78%, 36%);
+		--color-success-light: hsl(170, 78%, 42%);
+		--color-success-lighter: hsl(170, 78%, 47%);
+		--color-error-darker: hsl(342, 92%, 41%);
+		--color-error-dark: hsl(342, 92%, 47%);
+		--color-error: hsl(342, 92%, 54%);
+		--color-error-light: hsl(342, 92%, 60%);
+		--color-error-lighter: hsl(342, 92%, 65%);
+
+		/* background */
+		--color-bg-darker: hsl(232, 7%, 8%);
+		--color-bg-dark: hsl(233, 8%, 11%);
+		--color-bg: hsl(232, 11%, 15%);
+		--color-bg-light: hsl(233, 8%, 19%);
+		--color-bg-lighter: hsl(232, 7%, 22%);
+
+		/* color contrasts */
+		--color-contrast-lower: hsl(240, 6%, 26%);
+		--color-contrast-low: hsl(240, 3%, 41%);
+		--color-contrast-medium: hsl(213, 3%, 57%);
+		--color-contrast-high: hsl(240, 5%, 82%);
+		--color-contrast-higher: hsl(240, 100%, 99%);
+	}
+}
+
+@media (prefers-color-scheme: light) {
+	:root {
+		/* main */
+		--color-primary-darker: hsl(52, 100%, 34%);
+		--color-primary-dark: hsl(52, 100%, 40%);
+		--color-primary: hsl(52, 100%, 46%);
+		--color-primary-light: hsl(52, 100%, 52%);
+		--color-primary-lighter: hsl(52, 100%, 58%);
+		--color-accent-darker: hsl(187, 98%, 36%);
+		--color-accent-dark: hsl(187, 98%, 42%);
+		--color-accent: hsl(187, 98%, 48%);
+		--color-accent-light: hsl(187, 98%, 54%);
+		--color-accent-lighter: hsl(187, 98%, 60%);
+		--color-black: hsl(230, 13%, 9%);
+		--color-white: hsl(0, 0%, 100%);
+
+		/* feedback */
+		--color-warning-darker: hsl(35, 79%, 48%);
+		--color-warning-dark: hsl(35, 79%, 56%);
+		--color-warning: hsl(35, 79%, 66%);
+		--color-warning-light: hsl(35, 79%, 74%);
+		--color-warning-lighter: hsl(35, 79%, 82%);
+		--color-success-darker: hsl(170, 78%, 26%);
+		--color-success-dark: hsl(170, 78%, 31%);
+		--color-success: hsl(170, 78%, 36%);
+		--color-success-light: hsl(170, 78%, 42%);
+		--color-success-lighter: hsl(170, 78%, 47%);
+		--color-error-darker: hsl(342, 89%, 38%);
+		--color-error-dark: hsl(342, 89%, 43%);
+		--color-error: hsl(342, 89%, 48%);
+		--color-error-light: hsl(342, 89%, 56%);
+		--color-error-lighter: hsl(342, 89%, 62%);
+
+		/* background */
+		--color-bg-darker: hsl(240, 4%, 90%);
+		--color-bg-dark: hsl(240, 4%, 95%);
+		--color-bg: hsl(0, 0%, 100%);
+		--color-bg-light: hsl(0, 0%, 100%);
+		--color-bg-lighter: hsl(0, 0%, 100%);
+
+		/* color contrasts */
+		--color-contrast-lower: hsl(240, 4%, 85%);
+		--color-contrast-low: hsl(240, 4%, 65%);
+		--color-contrast-medium: hsl(225, 4%, 47%);
+		--color-contrast-high: hsl(230, 7%, 23%);
+		--color-contrast-higher: hsl(230, 13%, 9%);
+	}
+}
+
+:root {
+	--space-unit: 1rem;
+	--pure-white: #ffffff;
+	--heading-color: var(--color-primary-dark);
+	--text-color: #bdbdbd;
+	--column-width: 42rem;
+	--column-margin-top: 4rem;
+	--font-family: Inter, ui-sans-serif, sans-serif;
+	--font-size: 62.5%;
+	--transition-time: 0.4s;
+	margin: 0;
+}
+
+:global(html) {
+	background: linear-gradient(
+		159deg,
+		var(--color-bg-darker) 0,
+		var(--color-bg-darker) 40%,
+		var(--color-bg) 90%,
+		var(--color-bg-lighter) 99%
+	);
+	font-family: var(--font-family);
+	font-size: var(--font-size);
+}
+
+:global(body) {
+	display: flex;
+	position: relative;
+	flex-direction: row;
+	justify-content: center;
+	margin: auto;
+	padding: 1rem;
+	min-height: 98vh;
+	color: var(--text-color);
+	font-size: 1.6rem;
+}
+
+:global(::-webkit-scrollbar) {
+	width: 1rem;
+	-webkit-appearance: none;
+	background: linear-gradient(
+		159deg,
+		var(--color-primary) 0,
+		var(--secondary-color) 80%,
+		var(--tertiary-color) 99%
+	);
+}
+
+:global(::-webkit-scrollbar-track) {
+	border-radius: 10px;
+	background-color: transparent;
+}
+
+:global(::-webkit-scrollbar-thumb) {
+	background-color: #233140;
+	border-radius: 10px;
+	border: 0;
+}
+
+:global(::-webkit-scrollbar-corner, ::-webkit-scrollbar-track-piece) {
+	background: rgba(0, 0, 0, 0);
+}
+
+:global(p) {
+	font-weight: 400;
+	line-height: 1.5;
+	margin: 0;
+	margin-bottom: 1em;
+}
+
+:global(h1, h2, h3, h4, h5, h6, p > span) {
+	margin: 0;
+	line-height: 1;
+	padding-bottom: 0.5em;
+	color: var(--heading-color);
+}
+
+:global(h1, h2) {
+	line-height: 1.2;
+	background: linear-gradient(
+		to bottom,
+		var(--heading-color) 0em,
+		var(--heading-color) 1.2em,
+		var(--text-color) 2.4em
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+:global(h2, h3) {
+	font-weight: 600;
+}
+
+:global(a) {
+	text-decoration: none;
+	color: var(--color-accent);
+	-webkit-transition: 0.4s ease-in-out;
+	transition: 0.4s ease-in-out;
+
+	> * {
+		color: var(--text-color);
+		text-decoration: none;
+	}
+
+	&:hover {
+		color: var(--heading-color);
+		-webkit-transition: 0.4s ease-in-out;
+		transition: 0.4s ease-in-out;
+	}
+}
+
+:global(pre) {
+	color: var(--text-color);
+	font-size: 16px;
+	font-family: var(--font-mono);
+	background-color: rgba(255, 255, 255, 0.45);
+	border-radius: 3px;
+	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
+	padding: 0.5em;
+	overflow-x: auto;
+}

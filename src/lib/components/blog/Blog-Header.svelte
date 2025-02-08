@@ -25,8 +25,8 @@
 		padding: 4rem 2rem;
 		h1 { text-align : left; }
 		svg {
-			fill: white;
-			opacity: 0.2;
+			fill: var(--color-accent);
+			opacity: 0.4;
 			-webkit-transition: .4s ease-in-out;
 			transition: .4s ease-in-out;
 			filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));
@@ -39,15 +39,19 @@
 		}
 	}
 	#background-image {
+		border: 0.1em solid var(--color-accent);
+		padding: 0.2em;
 		position: absolute;
 		width: 100%;
 		height: 100%;
 		left: 0; top: 0;
-		background-image: url("/face-bg.webp");
+		//background-image: url("/face-bg.webp");
+		background-image: url("/media/cyberpunk.jpg");
 		background-position: center;
 		background-size: cover;
 		z-index: -1;
 	}
+	
 	#background-image::after {
 		content: "";
 		position: absolute;

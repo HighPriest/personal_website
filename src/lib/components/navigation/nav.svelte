@@ -41,10 +41,11 @@
 <style lang="scss">
     nav {
 	    position: fixed;
+        top: 0;
         right: 1rem;
         display: flex;
         align-items: center;
-        height: 100%;
+        height: 100vh;
         margin-right:-1rem;
         &:hover {
             ul {
@@ -60,12 +61,13 @@
             list-style-type: none;
             padding: 1rem;
             margin: -1rem;
-            width: 5rem;
-            background-color: var(--tertiary-color);
-            border-radius: 4rem 0rem 0rem 4rem;
+            width: 6rem;
+            //background-color: var(--wx-background-alt);
+            border-radius: 5rem 0rem 0rem 5rem;
+            border: 0.2em solid var(--color-accent);
             -webkit-transition: .4s ease-in-out;
             transition: .4s ease-in-out;
-            box-shadow: -1em 0px 1em 1rem var(--secondary-color), 2em 0em 2em 2em var(--tertiary-color);
+            box-shadow: 0em 0em 3em -1em var(--color-accent);
             li {
                 cursor: pointer;
                 padding: 0.8rem 0;
@@ -74,10 +76,11 @@
                     opacity: 0.2;
                 }
                 &:hover *{
-                    fill: var(--accent-color);
-                    color: var(--accent-color);
+                    fill: var(--color-primary);
+                    color: var(--color-accent);
                 }
                 svg {
+                    fill: var(--color-contrast-high);
                     height: 50%;
                 }
                 p {
@@ -93,6 +96,7 @@
 		nav {
 			position: fixed;
             display: block;
+            top: unset;
 			bottom: 1em;
 			left: 24px;
             margin-right: unset;
@@ -108,8 +112,9 @@
                 margin: 0;
                 height: 6rem;
                 width: auto;
+                border: 0.2em solid var(--color-accent);
                 border-radius: 24px;
-                backdrop-filter: blur(5px);
+                backdrop-filter: blur(5px) opacity(90%);
                 box-shadow:none;
                 li {
                     text-align: center;

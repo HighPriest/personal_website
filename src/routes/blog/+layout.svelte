@@ -16,8 +16,10 @@ main {
     display: grid;
     grid-auto-rows: max-content;
     overflow: auto;
+    max-width: 80em;
     padding: 6rem 2rem;
     margin-right: 2rem;
+    backdrop-filter: blur(2px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
@@ -40,7 +42,6 @@ main {
         width: 100%;
     }
     :global(.tag, .post) {
-        padding: 1rem !important;
         margin: 1rem !important;
         min-width: 15rem !important; /* TODO: Give it rem units */
         flex: 1 1 15rem !important;

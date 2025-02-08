@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { createTagsInput, melt } from '@melt-ui/svelte'
 	import { onMount } from 'svelte';
 	import '$lib/components/Ghost/Post.scss';
 
@@ -7,15 +6,9 @@
 	let { data }: { data: PageData } = $props();
 
 	// Create Tags List
-	const {
-		elements: { root, tag },
-		states: { tags },
-		helpers: { addTag }
-	} = createTagsInput();
-
-	data.post?.tags.forEach(tag => {
+	/*data.post?.tags.forEach(tag => {
 			addTag(tag);
-	});
+	});*/
 
 	console.log("Post Read data: ", data);
 
@@ -55,13 +48,7 @@
 <h1>{post?.title ?? ''}</h1>
 {@html post?.html ?? ''}
 {#if post && post.tags}
-<div use:melt={$root}>
-	{#each $tags as t}
-		<div use:melt={$tag(t)}>
-			<span>{t.value}</span>
-		</div>
-	{/each}
-</div>
+<!-- TODO: Create tags creation -->
 {/if}
 {/await}
 

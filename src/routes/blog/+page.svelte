@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Tag from "$lib/components/blog/Blog-Tag.svelte";
+	import Tag from "$lib/components/blog/BlogCategoryCard.svelte";
 	import Header from "$lib/components/blog/Blog-Header.svelte";
 
 	import type { PageData } from "./$types";
@@ -13,7 +13,7 @@
 	<meta name="description" content="Welcome to my tech blog, our go-to source for insights on computer tech, cybersecurity & vehicular automation! Lets talk about artificial intelligence, machine learning, and the Internet of Things (IoT). Stay informed about network security, data protection, and the latest innovations in smart technology and autonomous vehicles. Join us as we dissect the future of tech and empower your digital journey with essential knowledge and buzzworthy updates!" />
 </svelte:head>
 <Header />
-<h2>Topics</h2>
+<h1>Topics</h1>
 <section id="tags">
 {#each data.tagCards ?? [] as tagCards}
 	<Tag {...tagCards}/>
@@ -44,17 +44,25 @@
 			text-shadow: 4px 4px 0px #07bccc;
 		}
 	}*/
-	h2 {
+	h1 {
+		text-align: center;
+		font-weight: bold;
+		font-style: oblique;
+		font-size: 3em;
+		margin: 0 10em;
+		padding: 1em;
+	}
+	/*h2 {
 		font-family: cursive;
 		text-align: left;
 		font-weight: normal;
 		font-size: 5rem;
 		color: var(--heading-color);
-	}
+	}*/
 	#tags {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: column;
+		flex-direction: row;
 		justify-content: center;
 	}
 </style>

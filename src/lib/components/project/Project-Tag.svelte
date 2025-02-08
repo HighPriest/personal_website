@@ -34,7 +34,7 @@
 		width: auto;
 		padding: 1rem;
 		margin: 2rem;
-		background-color: var(--primary-color);
+		background-color: var(--color-primary);
 		-webkit-box-shadow: 0 1em 1em 0 rgba(15, 15, 20, 0.3);
 		box-shadow: 0 1em 1em 0 rgba(15, 15, 20, 0.3);
 		-webkit-transition: 0.4s ease-in-out;
@@ -43,7 +43,7 @@
 			-webkit-transform: translate(5px, 1px);
 			transform: translate(5px, 1px);
 			.info {
-				color: var(--accent-color);
+				color: var(--color-accent);
 			}
 		}
 
@@ -78,7 +78,7 @@
 			display: flex;
 			justify-content: space-between;
 			align-self:flex-end;
-			border-top: 1px solid var(--accent-color);
+			border-top: 1px solid var(--color-accent);
 		}
 	}
 </style>

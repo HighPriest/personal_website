@@ -86,7 +86,7 @@
 		padding: 3.2rem 2rem;
 		margin: 1rem;
 		height: -webkit-fill-available;
-		background: var(--secondary-color);
+		background: var(--color-bg);
 
 		> section {
 			width: 100%;

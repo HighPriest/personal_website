@@ -243,7 +243,7 @@
 		<form onsubmit={handleSubmit}>
 			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
 			<!-- TODO: Make it also accept individual files -->
-			<Dropzone on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true}>
+			<Dropzone on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
 				{@html m.codriver_translator_upload_box()}
 			</Dropzone>
 			<!--<input

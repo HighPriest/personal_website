@@ -1,15 +1,11 @@
 import adapter from "@sveltejs/adapter-node";
-import { preprocessMeltUI, sequence } from '@melt-ui/pp'
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	// Consult https://svelte.dev/docs/kit/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: sequence([
-		vitePreprocess(),
-		preprocessMeltUI(),
-	]),
+	preprocess: vitePreprocess(),
 
 	kit: {
 		// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
