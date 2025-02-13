@@ -11,8 +11,7 @@
 	console.log("Post Browse data: ", data);
 </script>
 
-<Header />
-<h1>Posts</h1>
+<Header title="Posts"/>
 <section id="posts">
 {#each posts ?? [] as post}
 	<Post {...post} />
@@ -20,14 +19,6 @@
 </section>
 
 <style>
-	h1 {
-		text-align: center;
-		font-weight: bold;
-		font-style: oblique;
-		font-size: 3em;
-		margin: 0 10em;
-		padding: 1em;
-	}
 	#posts {
 		display: flex;
 		flex-wrap: wrap;

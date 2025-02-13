@@ -3,9 +3,20 @@
     import BlogProfile from '$lib/components/blog/Blog-Profile.svelte';
     //import YoutubeFeed from '$lib/components/youtube-feed/YoutubeFeed.svelte';
     import type { Snippet } from 'svelte';
-    let { children}: { children: Snippet } = $props();
+    let { children, data }: { children: Snippet, data:any } = $props();
+
+    /* --- Dev content --- */
+    import { postStore } from '$lib';
+    import { Inspect } from 'svelte-inspect-value';
+    const dev = import.meta.env.DEV ? {
+        postStore,
+        Inspect
+    } : null;
 </script>
 
+{#if dev}
+<dev.Inspect value={$postStore} name="testing" />
+{/if}
 <main id="blog">
     {@render children()}
 </main>
@@ -14,7 +25,7 @@
 <style lang="scss">
 main {
     display: grid;
-    grid-auto-rows: max-content;
+    grid-auto-columns: 100%;
     overflow: auto;
     max-width: 80em;
     padding: 6rem 2rem;
@@ -22,13 +33,6 @@ main {
     backdrop-filter: blur(2px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
-}
-
-@media (pointer: coarse) {
-    main {
-        padding: 6rem auto;
-        margin: 0 auto;
-    }
 }
 
 @media (orientation: portrait) {

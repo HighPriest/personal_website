@@ -18,6 +18,8 @@
 	});
 </script>
 
+<!--TODO: THESE SHOULDN'T BE LINKS. Because they don't allow selecting contents. -->
+<!--TODO: Find a way to make them something else, which contents can be selectable, but on hover they are still going to prefetch data -->
 <a class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/post/${slug}`}>
 	<!--<img loading="lazy" src={feature_image} alt={feature_image_alt} />-->
 	<div class="post-text">
@@ -64,7 +66,7 @@
 				margin: 0.6rem;
 			}
 
-			.info {
+			.info * {
 				color: var(--color-accent);
 			}
 		}

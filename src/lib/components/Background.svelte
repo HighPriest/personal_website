@@ -15,8 +15,9 @@
 		.container {
 			z-index: -1;
 			position: absolute;
+			top: 0;
 			margin: -1rem; // This is to compensate 1rem of padding on body
-			height: 100%;
+			height: -webkit-fill-available;
 			width: 100%;
 			display: flex;
 			justify-content: center;

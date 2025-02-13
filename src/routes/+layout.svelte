@@ -10,11 +10,9 @@
 	import { page } from '$app/state';
 </script>
 
-<AmunTheme>
-	<ParaglideJS {i18n}>
-		{@render children()}
-	</ParaglideJS>
-</AmunTheme>
+<ParaglideJS {i18n}>
+	{@render children()}
+</ParaglideJS>
 <Background />
 
 <div class="lang-switcher">
@@ -34,6 +32,9 @@
 </div>
 
 <style lang="scss">
+	@use '$lib/styles/default'; 
+	@use '$lib/styles/custom';
+
 	.lang-switcher {
 		text-align: left;
 		cursor: pointer;

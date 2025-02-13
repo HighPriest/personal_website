@@ -149,22 +149,14 @@
 }
 
 :global(html) {
-	background: linear-gradient(
-		159deg,
-		var(--color-bg-darker) 0,
-		var(--color-bg-darker) 40%,
-		var(--color-bg) 90%,
-		var(--color-bg-lighter) 99%
-	);
 	font-family: var(--font-family);
 	font-size: var(--font-size);
 }
 
 :global(body) {
-	display: flex;
+	display: flow;
 	position: relative;
-	flex-direction: row;
-	justify-content: center;
+	justify-items: center;
 	margin: auto;
 	padding: 1rem;
 	min-height: 98vh;
@@ -199,6 +191,7 @@
 }
 
 :global(p) {
+	color: var(--text-color);
 	font-weight: 400;
 	line-height: 1.5;
 	margin: 0;
