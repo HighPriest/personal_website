@@ -32,6 +32,7 @@
 </div>
 
 <style lang="scss">
+	@use '$lib/styles/theme';
 	@use '$lib/styles/default'; 
 	@use '$lib/styles/custom';
 

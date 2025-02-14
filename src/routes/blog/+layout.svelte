@@ -1,6 +1,5 @@
 <script lang="ts">
     import Nav from '$lib/components/navigation/nav.svelte';
-    import BlogProfile from '$lib/components/blog/Blog-Profile.svelte';
     //import YoutubeFeed from '$lib/components/youtube-feed/YoutubeFeed.svelte';
     import type { Snippet } from 'svelte';
     let { children, data }: { children: Snippet, data:any } = $props();
@@ -15,7 +14,7 @@
 </script>
 
 {#if dev}
-<dev.Inspect value={$postStore} name="testing" />
+<dev.Inspect value={$postStore} name="testing" style="position: fixed; bottom: 0; z-index: 10;"/>
 {/if}
 <main id="blog">
     {@render children()}
