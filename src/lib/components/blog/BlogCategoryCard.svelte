@@ -6,7 +6,7 @@
 
 <!-- From Uiverse.io by ElSombrero2 --> 
 <div class="card">
-  <a data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/tag/${slug}`}>
+  <a onclick={() => false} data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/tag/${slug}`}>
 	<div class="content">
 	  <div class="front">
 		<div class="front-content">
