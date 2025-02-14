@@ -66,7 +66,7 @@
 				formData.append('pacenotes', file);
 			}
 
-			fetch('/tools/virtual-codriver?/loadPacenotes', {
+			fetch('/tools/pacenotes-translator?/loadPacenotes', {
 				method: 'POST',
 				body: formData
 			})
@@ -87,7 +87,7 @@
 				formData.append('config', file);
 			}
 
-			fetch('/tools/virtual-codriver?/loadConfig', {
+			fetch('/tools/pacenotes-translator?/loadConfig', {
 				method: 'POST',
 				body: formData
 			})
@@ -238,7 +238,7 @@
 <h1>Virtual CoDriver</h1>
 
 <article>
-	<div>
+	<div style="max-width: 25em;">
 		<p>{@html m.codriver_translator_subtitle()}</p>
 		<form onsubmit={handleSubmit}>
 			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
@@ -259,7 +259,7 @@
 			<!-- When configuration is uploaded, just create a new translate from map, without anything on output -->
 			<!--<button type="submit">Load Config</button>-->
 			<Button type={'primary'}>{@html m.codriver_translator_translate()}</Button>
-			<a aria-label="Download zip output button" href="./virtual-codriver" bind:this={zipElement}
+			<a aria-label="Download zip output button" href="./pacenotes-translator" bind:this={zipElement}
 			></a>
 		</form>
 		<ul id="pacenotesListing">
@@ -326,14 +326,14 @@
 							{void (mapPacenoteNames[pacenote.slot] = _currentNote.join('+'))}
 						{/if}
 						<div>
-							<span> {pacenote.slot} => </span>
+							<span> {pacenote.slot} =>
 							<input
 								type="text"
 								list="id_new"
 								bind:value={mapPacenoteNames[pacenote.slot]}
 								name={pacenote.id.toString()}
 								id={pacenote.slot + '_' + pacenote.id}
-							/>
+							/> </span>
 							<!-- TODO: Add visual validation, so no row is empty -->
 						</div>
 						<br />
@@ -356,17 +356,21 @@
 
 <style lang="scss">
 	article {
+		width: 100%;
 		display: flex;
 		flex-direction: row;
-		aside {
-			margin-left: 10em;
-		}
+		flex-wrap: wrap;
+		align-content: space-between;
+		justify-content: center;
 	}
 
 	#map-of-values {
 		.inline {
+			text-align: end;
 			div {
 				display: inline-block;
+				overflow: visible;
+    			width: max-content;
 			}
 		}
 	}

@@ -208,7 +208,7 @@ export async function handleTranslation(files: File[], idsMap: Map[], targetStan
 
         filteredData["PACENOTES"].count = pCounter;
         const outputContent = `; ${file.name} pacenotes file generated for CoPilot mods compatible with ${targetStandard} \n`
-        + "; For more details, please visit https://amun.pl/tools/virtual-codriver \n\n"
+        + "; For more details, please visit https://amun.pl/tools/pacenotes-translator \n\n"
         + ini.stringify(filteredData, { whitespace: true, platform: "win32" });
         // We are only handling .ini files, so this is fine
         // TODO: This should be webkitRelativePath, but the guys from svelte-file-dropzone fucked up
