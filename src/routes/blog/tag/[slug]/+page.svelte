@@ -1,12 +1,20 @@
 <script lang="ts">
-	import Post from "$lib/components/blog/BlogPostCard.svelte";
-	import Header from "$lib/components/blog/Blog-Header.svelte";
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import type { PageData } from './$types';
 
-	import type { PageData } from "./$types";
-	import { page } from "$app/state";
+	import Post from '$lib/components/blog/BlogPostCard.svelte';
+	import Header from '$lib/components/blog/Blog-Header.svelte';
+
+	import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
+	
     //const posts = data.posts?.filter(post => post.tags?.some(tag => $page.params.slug === tag));
 	const posts = data.posts;
+
+	onMount(() => {
+		trackPageView({url: page.url.pathname });
+	})
 
 	console.log("Post Browse data: ", data);
 </script>

@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { page } from '$app/state';
+	import type { PageData } from "./$types";
+
 	import '$lib/components/Ghost/Post.scss';
 
-	import type { PageData } from "./$types";
+	import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
 	// Create Tags List
@@ -26,6 +29,8 @@
 		script2.crossOrigin = "anonymous";
 		script2.referrerPolicy="no-referrer";
 		document.head.appendChild(script2);
+
+		trackPageView({url: page.url.pathname });
 	})
 </script>
 <style lang="scss">

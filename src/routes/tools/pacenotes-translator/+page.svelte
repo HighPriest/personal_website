@@ -5,17 +5,22 @@
 		type Config,
 		type ConfigContainer
 	} from './+page.server.ts';
+
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import type { PageProps } from './$types';
-	let { data }: PageProps = $props();
+
+	import { handleTranslation } from './translation_script.ts';
 
 	import * as m from '$lib/paraglide/messages.js';
-
 	import { Button } from 'wx-svelte-core';
 	import Dropzone from 'svelte-file-dropzone';
 	import Modal from '$lib/components/Modal.svelte';
-	let modalContents: string | undefined = $state(undefined);
 
-	import { handleTranslation } from './translation_script.ts';
+	import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
+	let { data }: PageProps = $props();
+
+	let modalContents: string | undefined = $state(undefined);
 
 	interface Settings {
 		from: {
@@ -58,6 +63,10 @@
 
 	let _currentNote: string[] | undefined;
 
+	onMount(() => {
+		trackPageView({url: page.url.pathname });
+	})
+
 	$effect(() => {
 		if (filesPacenotes.accepted) {
 			const formData = new FormData();
@@ -65,6 +74,8 @@
 			for (const file of filesPacenotes.accepted) {
 				formData.append('pacenotes', file);
 			}
+
+			trackEvent('RBR Files Upload', { type: 'Pacenotes'});
 
 			fetch('/tools/pacenotes-translator?/loadPacenotes', {
 				method: 'POST',
@@ -78,7 +89,7 @@
 					console.error('Error loading pacenotes: ', error);
 				});
 		}
-		if (filesConfig) {
+		if (filesConfig.accepted) {
 			// TODO: Leave parsing config for later.
 			// It is going to require inclusion of ini parser on client side & some replacement functions. Let's handle it in future stages
 			const formData = new FormData();
@@ -86,6 +97,8 @@
 			for (const file of filesConfig.accepted) {
 				formData.append('config', file);
 			}
+
+			trackEvent('RBR Files Upload', { type: 'Config'});
 
 			fetch('/tools/pacenotes-translator?/loadConfig', {
 				method: 'POST',

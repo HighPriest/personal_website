@@ -1,9 +1,17 @@
 <script lang="ts">
-	import Tag from "$lib/components/blog/BlogCategoryCard.svelte";
-	import Header from "$lib/components/blog/Blog-Header.svelte";
-
+	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import type { PageData } from "./$types";
+
+	import Tag from '$lib/components/blog/BlogCategoryCard.svelte';
+	import Header from '$lib/components/blog/Blog-Header.svelte';
+
+	import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
+
+	onMount(() => {
+		trackPageView({url: page.url.pathname });
+	})
 
 	console.log("Tags data: ", data);
 </script>
