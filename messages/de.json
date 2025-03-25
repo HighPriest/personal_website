@@ -1,0 +1,15 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "example_message": "Guten Tag {username}",
+  "landing_title": "Amun - Informationstechnologie",
+  "landing_description": "Löse das Rätsel. Tauche ein in die Tiefen des Wissens, in denen Technologie und Mysterium verschmelzen. Entdecke das Unsichtbare. Bist du bereit für eine neue Herausforderung?",
+  "card_contact_guide": "Oder, noch besser,<br> Verwenden Sie das Chat-Feld<br> unten rechts!",
+  "card_secret_button": "GEHEIMKNOPF",
+  "codriver_translator_subtitle": "CoDriver Pacenotes-Konvertierungstool.<br> Konvertieren Sie Ihre bevorzugten Pacenotes zwischen verschiedenen Standards und Konfigurationen.",
+  "codriver_translator_upload_box": "Legen Sie das MyPacenotes-Verzeichnis hier ab<br> <code>RBR\\Plugins\\NGPCarMenu\\MyPacenotes</code><br><br> Oder klicken Sie, um einzelne Pacenote-Dateien auszuwählen<br>",
+  "codriver_translator_translate": "Übersetzen",
+  "codriver_translator_translate_from": "Übersetzen von:",
+  "codriver_translator_translate_to": "Übersetzen in:",
+  "codriver_translator_map": "Bearbeitbare Zuordnung zwischen Werten",
+  "codriver_translator_download": "Speichern Sie übersetzte Pacenotes!"
+}

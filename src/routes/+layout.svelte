@@ -3,9 +3,7 @@
 	let { children } = $props();
 
 	// Translation stuff
-	import { i18n } from '$lib/i18n';
-	import { ParaglideJS } from '@inlang/paraglide-sveltekit';
-	import { availableLanguageTags, languageTag } from '$lib/paraglide/runtime.js';
+	import { locales, localizeHref, getLocale } from '$lib/paraglide/runtime';
 	import { page } from '$app/state';
 </script>
 
@@ -17,24 +15,23 @@
 		'data-auto-track': false
 	}}
 />
-<ParaglideJS {i18n}>
-	{@render children()}
-</ParaglideJS>
+
+{@render children()}
 <!--<Background />-->
 <div class="background"></div>
 
 <div class="lang-switcher">
 	<!-- Icon source https://cdn2.iconfinder.com/data/icons/world-flag-icons/128/Flag_of_Poland.png -->
-	{#each availableLanguageTags as lang}
+	{#each locales as locale}
 		<!-- the hreflang attribute decides which language the link points to -->
 		<a
-			href={i18n.resolveRoute(i18n.route(page.url.pathname), lang)}
-			hreflang={lang}
+			href={localizeHref(page.url.pathname, { locale })}
+			hreflang={locale}
 			aria-label="language"
-			aria-current={lang === languageTag() ? 'page' : undefined}
+			aria-current={locale === getLocale() ? 'page' : undefined}
 			class="lang-selector"
 		>
-			<img class="lang-flag" alt={lang} src={'/icons/i18n/' + lang + '.webp'} />
+			<img class="lang-flag" alt={locale} src={'/icons/i18n/' + locale + '.webp'} />
 		</a>
 	{/each}
 </div>
