@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { localizeHref } from "$lib/paraglide/runtime";
+
 	export let name: string, slug: string, feature_image: string, description: string, count: number, date_latest: string;
 
   // TODO: Add the rotation animation, to recently updated topics
@@ -6,7 +8,7 @@
 
 <!-- From Uiverse.io by ElSombrero2 --> 
 <div class="card">
-  <a onclick={() => false} data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/tag/${slug}`}>
+  <a onclick={() => false} data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={localizeHref(`/blog/tag/${slug}`)}>
 	<div class="content">
 	  <div class="front">
 		<div class="front-content">

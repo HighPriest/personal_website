@@ -68,12 +68,7 @@
 			height: 100%;
 			align-content: center;
 			padding: 0 1em;
-			background: linear-gradient(
-				to bottom,
-				var(--heading-color) 0em,
-				var(--color-accent) 1.2em,
-				var(--text-color) 2.4em
-			);
+			background: linear-gradient(to bottom,var(--heading-color) 0em,var(--color-accent) 1.8em,var(--text-color) 2.8em);
 			background-clip: text;
 		}
 		svg {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { localizeHref } from "$lib/paraglide/runtime";
+
 	export let title: string,
 		slug: string,
 		feature_image: string,
@@ -20,7 +22,7 @@
 
 <!--TODO: THESE SHOULDN'T BE LINKS. Because they don't allow selecting contents. -->
 <!--TODO: Find a way to make them something else, which contents can be selectable, but on hover they are still going to prefetch data -->
-<a onclick={() => false} class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={`/blog/post/${slug}`}>
+<a onclick={() => false} class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tag (${slug})`} href={localizeHref(`/blog/post/${slug}`)}>
 	<!--<img loading="lazy" src={feature_image} alt={feature_image_alt} />-->
 	<div class="post-text">
 		<div class="info">
@@ -112,6 +114,10 @@
 			top: 0;
 			left: 0;
 			object-fit: cover;
+		}
+
+		p {
+			color: var(--pure-white);
 		}
 
 		.info {

@@ -1,10 +1,11 @@
 <script lang="ts">
 	import ProgressBars from '$lib/components/blog/ProgressBars.svelte';
+	import { localizeHref } from '$lib/paraglide/runtime';
 </script>
 
 <aside>
 	<section id="header">
-		<a href="/blog"><img src="/eye-of-ra.webp" alt="" /></a>
+		<a href={localizeHref("/blog")}><img src="/eye-of-ra.webp" alt="" /></a>
 		<h3>Kamil 'HighPriest'</h3>
 		<p>Software Developer</p>
 		<p>Electronics Engineer</p>

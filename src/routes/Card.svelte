@@ -4,6 +4,9 @@
 	let { company, contact }: { company: Snippet; contact: Snippet } = $props();
 
 	import * as m from '$lib/paraglide/messages.js';
+	import { localizeHref } from '$lib/paraglide/runtime';
+
+	// TODO: Make logo animated with this: https://codepen.io/Juxtopposed/details/OJrLZvb
 </script>
 
 <!--Thanks to Josetxu https://codepen.io/collection/gYYajP-->
@@ -25,7 +28,7 @@
 			<div class="back">
 				<div class="text dynamic-text">
 					{@render contact()}
-					<a href="/blog" data-umami-event="Secret Button (Blog)"><button>{@html m.card_secret_button()}</button></a>
+					<a href={localizeHref("/blog")} data-umami-event="Secret Button (Blog)"><button>{@html m.card_secret_button()}</button></a>
 					<!--<p>AMUN Technologie
                     <br>895 224 10 28</p> -->
 				</div>

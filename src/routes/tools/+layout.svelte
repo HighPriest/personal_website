@@ -1,22 +1,23 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Nav from '$lib/components/navigation/nav.svelte';
 	import type { Snippet } from 'svelte';
 	let { children }: { children: Snippet } = $props();
 
 	import { Breadcrumbs, type Crumb } from 'svelte-breadcrumbs';
 	import { page } from '$app/state';
+
+	import { localizeHref } from '$lib/paraglide/runtime';
 </script>
 
 <Breadcrumbs url={page.url} routeId={page.route.id} crumbs={page.data.crumbs ? page.data.crumbs : null}>
 	{#snippet children({ crumbs })}
     <div>
-      <span><a href="/">Home</a></span>
+      <span><a href={localizeHref("/")}>Home</a></span>
       <!--
       Loop over the generated crumbs array
       -->
       {#each crumbs as c}
-        <span>></span>
+        <span></span>
 		<div style="display: inline-table">
 		{#if c.metadata !== undefined}
 		<span>
@@ -59,6 +60,6 @@
 
 <style lang="scss">
 	main {
-		max-width: 100rem;
+		max-width: 100vw;
 	}
 </style>

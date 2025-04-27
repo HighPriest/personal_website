@@ -7,14 +7,17 @@
     /* --- Dev content --- */
     import { postStore } from '$lib';
     import { Inspect } from 'svelte-inspect-value';
+	import { getLocale } from '$lib/paraglide/runtime';
     const dev = import.meta.env.DEV ? {
         postStore,
-        Inspect
+        Inspect,
+        getLocale
     } : null;
 </script>
 
 {#if dev}
 <dev.Inspect value={$postStore} name="testing" style="position: fixed; bottom: 0; z-index: 10;"/>
+<dev.Inspect value={getLocale()} name="Locale" />
 {/if}
 <main id="blog">
     {@render children()}
@@ -26,7 +29,8 @@ main {
     display: grid;
     grid-auto-columns: 100%;
     overflow: auto;
-    max-width: 80em;
+    max-width: 100lvw;
+    width: 80em;
     padding: 6rem 2rem;
     margin-right: 2rem;
     backdrop-filter: blur(2px);

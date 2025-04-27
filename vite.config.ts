@@ -3,12 +3,18 @@ import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [paraglideVitePlugin({ project: './project.inlang', outdir: './src/lib/paraglide' }),sveltekit()],
-    css: {
-        preprocessorOptions: {
-            scss: {
-                api: 'modern-compiler',
-            }
-        }
-    }
+	plugins: [
+		paraglideVitePlugin({ 
+            project: './project.inlang',
+            outdir: './src/lib/paraglide',
+            strategy: ["cookie", "preferredLanguage", "baseLocale"] }),
+		sveltekit()
+	],
+	css: {
+		preprocessorOptions: {
+			scss: {
+				api: 'modern-compiler'
+			}
+		}
+	}
 });

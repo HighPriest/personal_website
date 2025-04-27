@@ -139,7 +139,7 @@
 	--space-unit: 1rem;
 	--pure-white: #ffffff;
 	--heading-color: var(--color-primary-dark);
-	--text-color: #bdbdbd;
+	--text-color: var(--color-contrast-higher);
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--font-family: Inter, ui-sans-serif, sans-serif;
@@ -182,7 +182,7 @@
 }
 
 :global(::-webkit-scrollbar-thumb) {
-	background-color: #233140;
+	background-color: var(--color-accent-darker);
 	border-radius: 10px;
 	border: 0;
 }

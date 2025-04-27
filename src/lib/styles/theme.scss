@@ -2,7 +2,7 @@
     /* base colors */
     --wx-color-primary: var(--color-primary);
     --wx-color-primary-selected: rgba(var(--color-primary-darker), 0.3);
-    --wx-color-primary-font: #fff;
+    --wx-color-primary-font: var(--color-contrast-higher);
     --wx-color-secondary: transparent;
     --wx-color-secondary-hover: rgba(var(--color-accent-darker) 0.12);
     --wx-color-secondary-font: var(--color-accent);
@@ -17,14 +17,14 @@
     --wx-color-disabled: #384047;
     --wx-color-disabled-alt: #44474a;
 
-    --wx-color-font: rgba(255, 255, 255, 0.9);
-    --wx-color-font-alt: #9fa1ae;
-    --wx-color-font-disabled: #9fa1ae;
+    --wx-color-font: var(--color-contrast-higher);
+    --wx-color-font-alt: var(--color-contrast);
+    --wx-color-font-disabled: var(--color-contrast-lower);
     --wx-color-link: var(--wx-color-primary);
 
-    --wx-background: #2a2b2d;
-    --wx-background-alt: #384047;
-    --wx-background-hover: #20262b;
+    --wx-background: var(--color-bg);
+    --wx-background-alt: var(--color-bg-lighter);
+    --wx-background-hover: var(--color-accent-darker);
     /* end base colors */
 
     /* font */

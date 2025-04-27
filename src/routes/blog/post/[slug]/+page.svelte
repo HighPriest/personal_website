@@ -32,6 +32,8 @@
 
 		trackPageView({url: page.url.pathname });
 	})
+
+	// TODO: ?Add this type of fancy content list?
 </script>
 <style lang="scss">
 	//@import '$lib/components/Ghost/Post.css';

@@ -1,8 +1,10 @@
 <script lang="ts">
+	import { localizeHref } from "$lib/paraglide/runtime";
+
 	export let name: string, slug: string, feature_image: string, description: string, count: number;
 </script>
 
-<a class="tag" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tool (${slug})`} href={`/tools/${slug}`}>
+<a class="tag" data-sveltekit-preload-data="hover" data-umami-event={`Button: Tool (${slug})`} href={localizeHref(`/tools/${slug}`)}>
 	<img loading="lazy" src={feature_image} alt="Hero" />
 	<div class="posts-highlights">
 		<img loading="lazy" src={feature_image} alt="Post" />

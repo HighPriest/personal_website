@@ -206,7 +206,7 @@
 			}
 		} catch (error) {
 			// TODO: Add a modal about missing map.
-			modalContents = 'Validation failed<br>Last checked element: ' + missing_map;
+			modalContents = 'Validation failed<br>Check contents of element: ' + missing_map;
 			console.error('Last checked element:', missing_map);
 			console.error('Validation failed: ', error);
 			return;
