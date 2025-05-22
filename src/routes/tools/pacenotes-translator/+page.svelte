@@ -4,13 +4,14 @@
 		type MapContainer,
 		type Config,
 		type ConfigContainer
-	} from './+page.server.ts';
+	} from './types.ts';
 
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 	import type { PageProps } from './$types';
 
 	import { handleTranslation } from './translation_script.ts';
+	import { detectConfigFiles, parseConfig } from './config_parse_script.ts';
 
 	import * as m from '$lib/paraglide/messages.js';
 	import { Button } from 'wx-svelte-core';
@@ -121,6 +122,46 @@
 
 		filesPacenotes.accepted = [...filesPacenotes.accepted, ...acceptedFiles];
 		filesPacenotes.rejected = [...filesPacenotes.rejected, ...fileRejections];
+	}
+
+	function handleConfigFilesUpload(event: {
+		detail: {acceptedFiles: File[]; fileRejections: File[] };
+	}) {
+		const { acceptedFiles, fileRejections } = event.detail;
+
+		let rootConfig = acceptedFiles.find((file => file.name === 'RBR.ini'));
+
+		if (rootConfig) {
+			detectConfigFiles(rootConfig, acceptedFiles).then((filesToParse) => {
+				let configFile:ConfigContainer = {
+					name: "Your config", // This is wrong, this needs to be called "Your Config", or taken from user input
+					config: [],
+					maps: []
+				};
+				filesToParse.forEach(fileToParse => {
+					filesConfig.accepted = [...filesConfig.accepted, fileToParse]
+					parseConfig(fileToParse).then((pacenotes) => {
+						configFile.config.push(...pacenotes);
+					});
+				});
+				
+				// TODO: Add created config to the list of configs in data.configsParsed 
+				data.configsParsed = [...data.configsParsed, configFile];
+
+				// TODO: To each config, add this config as a map in data.mapsParsed
+				data.configsParsed.forEach((config) => {
+					if (config.name != configFile.name) {
+						config.maps = [...config.maps, {name: configFile.name, map: []}]
+					}
+				})
+			});
+		// filesConfig.accepted = [...filesConfig.accepted, ...acceptedFiles];
+		// TODO: (Unimportant) Move all the not used files from accepted to rejected
+		filesConfig.rejected = [...filesConfig.rejected, ...fileRejections];
+		} else {
+			modalContents = 'No root config found. Please upload RBR.ini';
+			console.error('No root config found. Please upload RBR.ini');
+		}
 	}
 
 	function handleSave() {
@@ -257,7 +298,7 @@
 			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
 			<!-- TODO: Make it also accept individual files -->
 			<Dropzone on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
-				{@html m.codriver_translator_upload_box()}
+				{@html m.codriver_translator_pacenote_upload_box()}
 			</Dropzone>
 			<!--<input
 				bind:files={filesPacenotes}
@@ -275,7 +316,12 @@
 			<a aria-label="Download zip output button" href="./pacenotes-translator" bind:this={zipElement}
 			></a>
 		</form>
-		<ul id="pacenotesListing">
+		<ul id="uploadedFiles">
+			<h3>Uploaded Configs</h3>
+			{#each filesConfig.accepted as configFile}
+				<li>{configFile.name}</li>
+			{/each}
+			<h3>Uploaded Pacenotes</h3>
 			{#each filesPacenotes.accepted as pacenoteFile}
 				<li>{pacenoteFile.name}</li>
 			{/each}
@@ -285,18 +331,14 @@
 	<aside id="map-of-values">
 		<div>
 			<!-- TODO: Add a hover notice, that it might be difficult to map your own config -->
-			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now
-      <p>Upload your current config:</p>
-      <input
-        bind:files={filesConfig}
-        type="file"
-        name="configToParse"
-        id="configToParse"
-        
-        webkitdirectory
-        multiple>
-    </div>
-    <br>-->
+			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now -->
+			<div>
+				<p>Upload your current, personal config:</p>
+				<Dropzone on:drop={handleConfigFilesUpload} preventDropOnDocument={true} noClick={true} accept=".ini">
+					{@html m.codriver_translator_config_upload_box()}
+				</Dropzone>
+			</div>
+			<br>
 			<div class="inline">
 				<div>
 					<p>{@html m.codriver_translator_translate_from()}</p>
@@ -311,6 +353,7 @@
 						{/each}
 					</select>
 				</div>
+				<p style="display:inline;">--></p>
 				<div>
 					<p>{@html m.codriver_translator_translate_to()}</p>
 					<select

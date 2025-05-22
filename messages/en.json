@@ -1,14 +1,16 @@
 {
-  "$schema": "https://inlang.com/schema/inlang-message-format",
-  "landing_title": "Amun - Information Technology",
-  "landing_description": "Unlock the enigma. Delve into layers of knowledge, where technology intertwines with mystery. Discover the unseen. Are you ready, for a new quest?",
-  "card_contact_guide": "Or, even better,<br> use the chat box<br> bottom right!",
-  "card_secret_button": "SECRET BUTTON",
-  "codriver_translator_subtitle": "CoDriver Pacenotes Conversion tool.<br>Convert your favorite pacenotes between different standards & configs.",
-  "codriver_translator_upload_box": "Drop the MyPacenotes directory here<br><code>RBR\\Plugins\\NGPCarMenu\\MyPacenotes</code><br><br>Or click to select individual pacenote files<br>",
-  "codriver_translator_translate": "Translate",
-  "codriver_translator_translate_from": "Translate from:",
-  "codriver_translator_translate_to": "Translate to:",
-  "codriver_translator_map": "Editable map between values",
-  "codriver_translator_download": "Save translated pacenotes!"
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+	"landing_title": "Amun - Information Technology",
+	"landing_description": "Unlock the enigma. Delve into layers of knowledge, where technology intertwines with mystery. Discover the unseen. Are you ready, for a new quest?",
+	"card_contact_guide": "Or, even better,<br> use the chat box<br> bottom right!",
+	"card_secret_button": "SECRET BUTTON",
+	"codriver_translator_subtitle": "CoDriver Pacenotes Conversion tool.<br>Convert your favorite pacenotes between different standards & configs.",
+	"codriver_translator_upload_box": "Drop the MyPacenotes directory here<br><code>RBR\\Plugins\\NGPCarMenu\\MyPacenotes</code><br><br>Or click to select individual pacenote files<br>",
+	"codriver_translator_translate": "Translate",
+	"codriver_translator_translate_from": "Translate from:",
+	"codriver_translator_translate_to": "Translate to:",
+	"codriver_translator_map": "Editable map between values",
+	"codriver_translator_download": "Save translated pacenotes!",
+	"codriver_translator_pacenote_upload_box": "Drop the MyPacenotes directory here<br><code>RBR\\Plugins\\NGPCarMenu\\MyPacenotes</code><br><br>Or click to select individual pacenote files<br>",
+	"codriver_translator_config_upload_box": "Drop the config directory here<br><code>RBR\\Plugins\\Pacenote\\config</code><br><br>"
 }

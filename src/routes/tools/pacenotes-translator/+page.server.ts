@@ -2,37 +2,18 @@ import fs from 'fs';
 import path from 'path';
 import type { PageServerLoad } from './$types';
 
+	import {
+		type Map,
+		type MapContainer,
+		type Config,
+		type ConfigContainer
+	} from './types.ts';
+
 // TODO: Make user send their configuration
 // Export pacenote names & ids from that configuration
 // Find the map matching most names & ids in the old columns
 // Load this map
 // Not mapped names mark as NULL & don't let user do the conversion without all values being mapped
-
-export type Map = {
-	old_category: string;
-	old_pacenote: string;
-	old_id: number;
-	new_category: string[];
-	new_pacenote: string[];
-	new_id: number[];
-};
-
-export type MapContainer = {
-	name: string;
-	map: Map[];
-};
-
-export type Config = {
-	id: number;
-	category: string;
-	slot: string;
-};
-
-export type ConfigContainer = {
-	name: string;
-	config: Config[];
-	maps: MapContainer[];
-};
 
 export const load: PageServerLoad = async () => {
 	// Function for parsing CSV files into arrays
