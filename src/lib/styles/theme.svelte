@@ -1,12 +1,12 @@
 <script>
-	import { setContext } from "svelte";
+	// import { setContext } from "svelte";
+	// setContext("theme", "amun");
 
 	let { children } = $props();
-	setContext("wx-theme", "amun");
 </script>
 
 {#if children}
-	<div class="wx-amun-theme" style="height:100%">
+	<div style="height:100%">
 		{@render children()}
 	</div>
 {/if}

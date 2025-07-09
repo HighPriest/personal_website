@@ -14,7 +14,6 @@
 	import { detectConfigFiles, parseConfig } from './config_parse_script.ts';
 
 	import * as m from '$lib/paraglide/messages.js';
-	import { Button } from 'wx-svelte-core';
 	import Dropzone from 'svelte-file-dropzone';
 	import Modal from '$lib/components/Modal.svelte';
 
@@ -129,7 +128,7 @@
 	}) {
 		const { acceptedFiles, fileRejections } = event.detail;
 
-		let rootConfig = acceptedFiles.find((file => file.name === 'RBR.ini'));
+		let rootConfig = acceptedFiles.find((file => file.name.toLowerCase() === 'rbr.ini'));
 
 		if (rootConfig) {
 			detectConfigFiles(rootConfig, acceptedFiles).then((filesToParse) => {
@@ -260,7 +259,7 @@
 		).then((blob) => {
 			const link = document.createElement('a');
 			link.href = URL.createObjectURL(blob);
-			link.className = "wx-button wx-secondary";
+			link.className = "";
 			link.style = "font-size: 2em; font-weight: bold";
 			link.download = 'translated_pacenotes.zip';
 			link.text = m.codriver_translator_download();
@@ -311,8 +310,9 @@
 			<br /><br />
 			<!--TODO: Create configuration parsing in JavaScript-->
 			<!-- When configuration is uploaded, just create a new translate from map, without anything on output -->
-			<!--<button type="submit">Load Config</button>-->
-			<Button type={'primary'}>{@html m.codriver_translator_translate()}</Button>
+			<button type="submit">{@html m.codriver_translator_translate()}</button>
+			<br /><br />
+			<!--<Button type={'primary'}>{@html m.codriver_translator_translate()}</Button>-->
 			<a aria-label="Download zip output button" href="./pacenotes-translator" bind:this={zipElement}
 			></a>
 		</form>
