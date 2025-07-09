@@ -296,8 +296,19 @@
 		<form onsubmit={handleSubmit}>
 			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
 			<!-- TODO: Make it also accept individual files -->
-			<Dropzone on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
-				{@html m.codriver_translator_pacenote_upload_box()}
+			<Dropzone containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
+				<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+					<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
+					<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
+						{@html m.codriver_translator_pacenote_upload_box()}
+					</p>
+					<!--<p style="font-size: 0.75rem; line-height: 1rem; color: rgb(107,114,128);">
+						{accept}
+						{#if maxSize}
+							<span>(Size limit: {formatFileSize(maxSize)})</span>
+						{/if}
+					</p>-->
+				</div>
 			</Dropzone>
 			<!--<input
 				bind:files={filesPacenotes}
@@ -334,8 +345,26 @@
 			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now -->
 			<div>
 				<p>Upload your current, personal config:</p>
-				<Dropzone on:drop={handleConfigFilesUpload} preventDropOnDocument={true} noClick={true} accept=".ini">
-					{@html m.codriver_translator_config_upload_box()}
+				<Dropzone     
+					on:dragover={() => {
+						const dz = document.querySelector('.customDropzone');
+						if (dz) dz.classList.add('dragover');
+					}}
+					on:dragleave={() => {
+						const dz = document.querySelector('.customDropzone');
+						if (dz) dz.classList.remove('dragover');
+					}}
+					on:drop={() => {
+						const dz = document.querySelector('.customDropzone');
+						if (dz) dz.classList.remove('dragover');
+					}}
+					containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handleConfigFilesUpload} preventDropOnDocument={true} noClick={true} accept=".ini">
+					<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+						<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
+						<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
+							{@html m.codriver_translator_config_upload_box()}
+						</p>
+					</div>
 				</Dropzone>
 			</div>
 			<br>
@@ -353,7 +382,7 @@
 						{/each}
 					</select>
 				</div>
-				<p style="display:inline;">--></p>
+				<p style="display:inline;"></p>
 				<div>
 					<p>{@html m.codriver_translator_translate_to()}</p>
 					<select
@@ -427,6 +456,35 @@
 				display: inline-block;
 				overflow: visible;
     			width: max-content;
+			}
+		}
+	}
+
+	:global(.customDropzone) {
+		position: relative;
+		display: flex;
+		min-height: 200px;
+		width: 300px;
+		cursor: pointer;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		border-radius: 0.75rem;
+		border-width: 2px;
+		border-style: dashed;
+		border-color: #d1d5db;
+		background-color: #f9fafb;
+		padding: 1.5rem;
+		text-align: center;
+		transition: color, background-color, border-color, text-decoration-color, fill, stroke;
+		transition-duration: 0.5s;
+		border-color: #374151;
+		background-color: #1f2937;
+		&:hover, &:focus, &.dragover {
+			background-color: #f3f4f6;
+			svg {
+				color: black;
 			}
 		}
 	}
