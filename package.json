@@ -50,9 +50,6 @@
       "@parcel/watcher",
       "esbuild",
       "svelte-kit"
-    ],
-    "ignoredBuiltDependencies": [
-      "svelte-kit"
     ]
   }
 }
