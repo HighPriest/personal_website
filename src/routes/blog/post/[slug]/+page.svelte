@@ -13,7 +13,7 @@
 			addTag(tag);
 	});*/
 
-	console.log("Post Read data: ", data);
+	$inspect("Post Read data: ", data);
 
 	onMount(() => {
 		const script = document.createElement("script");

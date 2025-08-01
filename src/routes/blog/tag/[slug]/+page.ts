@@ -13,7 +13,7 @@ const api = new TSGhostContentAPI(GHOST_URL, GHOST_KEY, GHOST_VERSION);
 // TODO: Don't load all posts immediately. Make them load only on hover of a tag
 export const load = (async ({ params }) => {
 	const postStore_ = get(postStore);
-	console.log("postStore_: ", postStore_)
+	console.debug("postStore_: ", postStore_);
 	// FIX: Checking if there are posts with current tag in the store, IS A BUG!
 	// Because every post can have many tags, it is possible that only some posts with select tag are in the store
 	// Tags either have to be unique, or there needs to be a separate, unique, category value for posts
@@ -25,8 +25,7 @@ export const load = (async ({ params }) => {
 	// TODO: Maybe it is a good idea to do this length > 1 check in the post reader script and querying the API for the postCards there.
 	// This is going to fix the issue with the cache, but is still not elegant.
 	if (postStore_ && postStore_.some(post => post.tags?.some(tag => tag.slug == params.slug)) && postStore_.length > 1) {
-		console.log("No fetch posts cards");
-		console.log("Tags: ", postStore_[0].tags);
+		console.debug("Using cache! No fetch posts cards!\n", "Tags: ", postStore_[0].tags);
 		return {
 			posts:
 				postStore_.filter(posts => posts.tags?.some(tag => tag.slug == params.slug)).map((post: Post) => ({
@@ -41,7 +40,7 @@ export const load = (async ({ params }) => {
 				}))
 		};
 	} else {
-		console.log("Fetch posts cards");
+		console.debug("Fetch posts cards");
 		let result = await api.posts.browse({
 			filter: `tags:${params.slug}`,
 			limit: 10
@@ -75,7 +74,7 @@ export const load = (async ({ params }) => {
 			};
 		} else {
 			// errors array of objects
-			console.log(result.errors.map((e) => e.message).join("\n"));
+			console.error(result.errors.map((e) => e.message).join("\n"));
 		}
 	}
 }) satisfies PageLoad;

@@ -13,7 +13,7 @@
 		trackPageView({url: page.url.pathname });
 	})
 
-	console.log("Tags data: ", data);
+	$inspect("Tags data: ", data);
 </script>
 
 <svelte:head>

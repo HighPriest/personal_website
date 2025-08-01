@@ -215,7 +215,7 @@ export async function handleTranslation(files: File[], idsMap: Map[], targetStan
         // Relevant thread https://github.com/thecodejack/svelte-file-dropzone/issues/169
         zip.file(file.path.replace(".ini","_"+targetStandard+".ini"), outputContent);
 
-        console.log(`Processed: `, file.name);
+        console.debug(`Processed: `, file.name);
     }
 
     return zip.generateAsync({ type: 'blob' });

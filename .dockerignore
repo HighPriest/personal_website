@@ -1,0 +1,24 @@
+# Ignore git history
+**/.git
+
+# Ignore local dependencies (they are installed inside the container)
+**/node_modules/
+
+# Ignore build artifacts if they exist locally
+**/dist
+**/.svelte-kit
+**/build
+
+# Env
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+# Ignore system files
+Thumbs.db
+.DS_Store

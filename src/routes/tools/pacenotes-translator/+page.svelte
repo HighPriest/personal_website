@@ -18,6 +18,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 
 	import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
+	import { error } from 'console';
 	let { data }: PageProps = $props();
 
 	let modalContents: string | undefined = $state(undefined);
@@ -83,7 +84,7 @@
 			})
 				.then((response) => response.json())
 				.then((data) => {
-					console.log('Pacenotes loaded: ', data);
+					$inspect('Pacenotes loaded: ', data);
 				})
 				.catch((error) => {
 					console.error('Error loading pacenotes: ', error);
@@ -106,7 +107,7 @@
 			})
 				.then((response) => response.json())
 				.then((data) => {
-					console.log('Config loaded: ', data);
+					$inspect('Config loaded: ', data);
 				})
 				.catch((error) => {
 					console.error('Error loading config: ', error);

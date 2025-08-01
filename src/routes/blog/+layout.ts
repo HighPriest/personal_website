@@ -14,7 +14,7 @@ const api = new TSGhostContentAPI(GHOST_URL, GHOST_KEY, GHOST_VERSION);
 export const load = (async () => {
 	const tagStore_ = get(tagStore);
 	if (Object.keys(tagStore_).length !== 0) {
-		console.log("No fetch tags");
+		console.debug("Using cache! No fetch tags");
 		return {
 			tagCards:
 				tagStore_.map((tag: Tag) => ({
@@ -26,7 +26,7 @@ export const load = (async () => {
 			}))
 		};
 	} else {
-		console.log("Fetch tags");
+		console.debug("Fetch tags");
 		let result = await api.tags
 			.browse({
 				order: "count.posts DESC"
@@ -52,7 +52,7 @@ export const load = (async () => {
 			}
 		} else {
 			// errors array of objects
-			console.log(result.errors.map((e) => e.message).join("\n"));
+			console.error(result.errors.map((e) => e.message).join("\n"));
 		}
 	}
 }) satisfies LayoutLoad;

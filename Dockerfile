@@ -16,7 +16,7 @@ COPY pnpm-lock.yaml package.json ./
 
 # 2. Install dependencies.
 # This step is now cached as long as the lockfile doesn't change.
-RUN pnpm install --offline --prod=false
+RUN pnpm install --prod=false
 
 # 3. Copy the rest of your source code.
 # The dependency layer above will remain cached if you only change these files.

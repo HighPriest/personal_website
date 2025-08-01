@@ -13,7 +13,7 @@ const api = new TSGhostContentAPI(GHOST_URL, GHOST_KEY, GHOST_VERSION);
 export const load = (async ({ params }) => {
 	const posts = get(postStore);
 	if (posts && posts.some(post => post.slug === params.slug) && posts.find(post => post.slug === params.slug)?.html) {
-		console.log("No fetch post");
+		console.debug("Using cache! No fetch post");
 		const post = posts.find(post => post.slug === params.slug);
 		return {
 			post:
@@ -30,7 +30,7 @@ export const load = (async ({ params }) => {
 				}
 		};
 	} else {
-		console.log("Fetch post");
+		console.debug("Fetch post");
 		let result = await api.posts.read({
 			slug: params.slug,
 			//order: 'updated_at DESC'
@@ -66,7 +66,7 @@ export const load = (async ({ params }) => {
 			};
 		} else {
 			// errors array of objects
-			console.log(result.errors.map((e) => e.message).join("\n"));
+			console.error(result.errors.map((e) => e.message).join("\n"));
 		}
 	}
 }) satisfies PageLoad;

@@ -16,7 +16,7 @@
 		trackPageView({url: page.url.pathname });
 	})
 
-	console.log("Post Browse data: ", data);
+	$inspect("Post Browse data: ", data);
 </script>
 
 <Header title="{String(page.params.slug.charAt(0).toUpperCase() + String(page.params.slug).slice(1)).replaceAll('-', ' ')}"/>

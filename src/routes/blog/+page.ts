@@ -26,7 +26,7 @@ export const load = (async () => {
 		};
 	} else {
 		// errors array of objects
-		console.log(result.errors.map((e) => e.message).join("\n"));
+		console.error(result.errors.map((e) => e.message).join("\n"));
 	}
 }) satisfies PageLoad;
 */
