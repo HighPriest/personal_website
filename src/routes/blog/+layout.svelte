@@ -1,5 +1,7 @@
 <script lang="ts">
     import Nav from '$lib/components/navigation/nav.svelte';
+    import RouteTransition from '$lib/components/ui/RouteTransition.svelte';
+    import {navigating} from '$app/state';
     //import YoutubeFeed from '$lib/components/youtube-feed/YoutubeFeed.svelte';
     import type { Snippet } from 'svelte';
     let { children, data }: { children: Snippet, data:any } = $props();
@@ -20,7 +22,9 @@
 <dev.Inspect value={getLocale()} name="Locale" />
 {/if}
 <main id="blog">
-    {@render children()}
+    <RouteTransition pagein={navigating.from} pageout={navigating.to}>
+        {@render children()}
+    </RouteTransition>
 </main>
 <Nav />
 
