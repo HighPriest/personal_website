@@ -20,10 +20,8 @@
 	<link rel="stylesheet" href="/livematrix/livematrix.css" />
 </svelte:head>
 
-<aside id="app" style="position: fixed; display: inline;"></aside>
-
 <style>
-	#app * {
+/* 	#app * {
 		font-family: 'Roboto', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
 			'Noto Color Emoji';
 	}
@@ -31,5 +29,5 @@
 		right: 0;
 		bottom: 0;
 		width: 0;
-	}
+	} */
 </style>
