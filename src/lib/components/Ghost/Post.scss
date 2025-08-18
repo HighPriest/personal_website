@@ -23,6 +23,13 @@ $gray: #9b9b9b;
 
 /* Post Content */
 article {
+    @keyframes slide-fade-in {
+        from {
+            opacity: 0;
+            box-shadow: none;
+            transform: scale(0.8) translateY(15vh);
+        }
+    }
     max-width: 800px;
     /* Adjust as needed */
     margin: auto;
@@ -182,6 +189,13 @@ article {
 
     /* Figure Styles */
     figure {
+        @media (prefers-reduced-motion: no-preference) {
+			@supports (animation-timeline: view()) {
+				animation: slide-fade-in both;
+				animation-timeline: view();
+				animation-range: contain -30% contain 30%;
+			}
+		}
         margin: 20px 0;
         text-align: center;
         width: 100%;

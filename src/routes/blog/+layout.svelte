@@ -32,7 +32,7 @@
 main {
     display: grid;
     grid-auto-columns: 100%;
-    overflow: auto;
+    // overflow: auto; // disable overflow: auto to make view based transitions work (animated entry)
     max-width: 100lvw;
     width: 80em;
     padding: 6rem 2rem;

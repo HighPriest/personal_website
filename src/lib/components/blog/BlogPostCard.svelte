@@ -40,9 +40,24 @@
 </a>
 
 <style lang="scss">
+	@keyframes slide-fade-in {
+		from {
+			opacity: 0;
+			box-shadow: none;
+			transform: scale(0.8) translateY(15vh);
+		}
+	}
 	.title {
 	}
 	.post {
+		// Thanks to Adam Argyle: https://codepen.io/argyleink/pen/VwNMLQN
+		@media (prefers-reduced-motion: no-preference) {
+			@supports (animation-timeline: view()) {
+				animation: slide-fade-in both;
+				animation-timeline: view();
+				animation-range: contain -30% contain 50%;
+			}
+		}
 		display: block;
 		position: relative;
 		flex: 1 1 20rem;

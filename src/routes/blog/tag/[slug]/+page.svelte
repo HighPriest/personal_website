@@ -8,22 +8,26 @@
 
 	import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
-	
-    //const posts = data.posts?.filter(post => post.tags?.some(tag => $page.params.slug === tag));
+
+	//const posts = data.posts?.filter(post => post.tags?.some(tag => $page.params.slug === tag));
 	const posts = data.posts;
 
 	onMount(() => {
-		trackPageView({url: page.url.pathname });
-	})
+		trackPageView({ url: page.url.pathname });
+	});
 
-	$inspect("Post Browse data: ", data);
+	$inspect('Post Browse data: ', data);
 </script>
 
-<Header title="{String(page.params.slug.charAt(0).toUpperCase() + String(page.params.slug).slice(1)).replaceAll('-', ' ')}"/>
+<Header
+	title={String(
+		page.params.slug.charAt(0).toUpperCase() + String(page.params.slug).slice(1)
+	).replaceAll('-', ' ')}
+/>
 <section id="posts">
-{#each posts ?? [] as post}
-	<Post {...post} />
-{/each}
+	{#each posts ?? [] as post}
+		<Post {...post} />
+	{/each}
 </section>
 
 <style>
