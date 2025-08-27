@@ -10,6 +10,13 @@
 			"host": "lm.amun.pl",
 			"port": ""
 		},
-		"greeting": "PL: Witaj. Otrzymałem właśnie powiadomienie o twojej próbie kontaktu. Może zająć chwilkę zanim podniosę telefon. Nie musisz czekać na odpowiedź! Wszystkie wiadomości zostaną przywrócone, gdy znów otworzysz tą stronę. Możesz zamknąc przeglądarkę i wrócić tutaj, gdy będziesz znów chciał ze mną porozmawiać.  EN: Welcome. I have just been notified about your message. It may take a moment before I pick up the phone. You don't need to wait for a response! All messages are going to be restored, when you open this page again. You can close the browser and return here, when you want to talk to me again."
+		"greetings": {
+			"bubble": "Questions?",
+			"message": "PL: Witaj. Otrzymałem właśnie powiadomienie o twojej próbie kontaktu. Może zająć chwilkę zanim podniosę telefon. Nie musisz czekać na odpowiedź! Wszystkie wiadomości zostaną przywrócone, gdy znów otworzysz tą stronę. Możesz zamknąc przeglądarkę i wrócić tutaj, gdy będziesz znów chciał ze mną porozmawiać.  EN: Welcome. I have just been notified about your message. It may take a moment before I pick up the phone. You don't need to wait for a response! All messages are going to be restored, when you open this page again. You can close the browser and return here, when you want to talk to me again."
+		},
+		"metadata": {
+			"companyName": "Amun IT",
+			"companyLogo": "/eye-of-ra.webp"
+		}
 	}
 }

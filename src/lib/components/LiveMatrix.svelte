@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<script type="module" src="/livematrix/livematrix.min.js"></script>
+	<script type="module" src="/livematrix/livematrix.js"></script>
 	<link rel="stylesheet" href="/livematrix/livematrix.css" />
 </svelte:head>
 
