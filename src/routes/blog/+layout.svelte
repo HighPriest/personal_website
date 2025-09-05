@@ -35,11 +35,10 @@ main {
     display: grid;
     grid-auto-columns: 100%;
     position: relative;
+    padding: unset; margin: unset;
     // overflow: auto; // disable overflow: auto to make view based transitions work (animated entry)
     max-width: 100lvw;
     width: 80em;
-    padding: 6rem 2rem;
-    margin-right: 2rem;
     backdrop-filter: blur(2px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -47,8 +46,6 @@ main {
 
 @media (orientation: portrait) {
     main {
-        padding: unset;
-        margin: unset;
         margin-bottom: 6rem;
         padding-bottom: 2rem;
         width: 100%;
