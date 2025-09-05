@@ -24,6 +24,11 @@ export const load = (async ({ params }) => {
 	// This check is done, because if we load directly into a blog post, only this single post is going to be loaded into the postCards view.
 	// TODO: Maybe it is a good idea to do this length > 1 check in the post reader script and querying the API for the postCards there.
 	// This is going to fix the issue with the cache, but is still not elegant.
+
+	// The correct way to do cache invalidation here, would be to keep timestamp of the last check for latest posts
+		// Then, only check if the delay expires
+		// And first ask the API only for one, latest updated post and check if it matches existence and update time of our cache
+		// And only then invalidate the cache and download entire set of new data
 	if (postStore_ && postStore_.some(post => post.tags?.some(tag => tag.slug == params.slug)) && postStore_.length > 1) {
 		console.debug("Using cache! No fetch posts cards!\n", "Tags: ", postStore_[0].tags);
 		return {
@@ -43,8 +48,8 @@ export const load = (async ({ params }) => {
 		console.debug("Fetch posts cards");
 		let result = await api.posts.browse({
 			filter: `tags:${params.slug}`,
-			limit: 10
-			//order: 'updated_at DESC'
+			limit: 10,
+			order: 'updated_at DESC'
 		}).include({
 			authors: true,
 			tags: true,
@@ -56,7 +61,10 @@ export const load = (async ({ params }) => {
 				// Alt approach, which is going to recreate the posts store every time a new tag is hovered
 				// Seems like a cleaner approach, which guarantees new content is always loaded on fetch.
 				// But it is going to be slower in JS & is used after we've already checked for posts existence.
+				// Wipe all posts which match current tag
 				posts = posts.filter(post => post.tags?.some(tag => tag.slug != params.slug));
+				// Wipe all posts which have id of one of the posts
+				posts = posts.filter(post => result.data.some(post_ => post_.id != post.id));
 				posts.push(...result.data);
 				return posts;
 			});

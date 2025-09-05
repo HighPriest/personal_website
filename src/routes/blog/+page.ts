@@ -36,7 +36,7 @@ export const load = (async () => {
 	const result = await api.posts
 		.browse({
 			limit: 5,
-			order: 'published_at DESC'
+			order: 'updated_at DESC'
 		})
 		.include({
 			authors: true,

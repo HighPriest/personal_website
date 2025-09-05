@@ -113,7 +113,7 @@
 
 		<!-- Right grid -->
 		<div class="grid">
-			{#each posts.length ? posts.slice(1, 5) : placeholders.slice(1, 5) as post (post.slug)}
+			{#each posts.length ? posts.slice(1, 5) : placeholders.slice(1, 5) as post}
 				<!-- post is now typed as Featured -->
 				<article class="post {post.feature_image ? '' : 'placeholder'}">
 					<div
@@ -214,6 +214,8 @@
 				position: relative;
 				overflow: hidden;
 				border-radius: 0.25rem;
+				width: 100%;
+    			height: 100%;
 
 				.image {
 					width: 100%;
