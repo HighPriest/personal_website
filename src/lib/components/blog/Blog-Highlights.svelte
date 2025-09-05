@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { localizeHref } from "$lib/paraglide/runtime";
+	
 	let { posts = [] } = $props();
 
 	type Featured = {
@@ -99,7 +101,7 @@
 						? `background-image:linear-gradient(180deg,transparent 50%,black 90%), url('${featured.feature_image}')`
 						: ''}
 				></div>
-				<a href={featured.slug} class="overlay">
+				<a onclick={() => false} data-sveltekit-preload-data="hover" data-umami-event={`Button: Post (${featured.slug})`} href={localizeHref(`/blog/post/${featured.slug}`)} class="overlay">
 					<div class="meta">
 						<h3>{featured.title}</h3>
 						<span class="details">
@@ -122,7 +124,7 @@
 							? `background-image:linear-gradient(180deg,transparent 50%,black 90%), url('${post.feature_image}')`
 							: ''}
 					></div>
-					<a href={post.slug} class="overlay">
+					<a onclick={() => false} data-sveltekit-preload-data="hover" data-umami-event={`Button: Post (${post.slug})`} href={localizeHref(`/blog/post/${post.slug}`)} class="overlay">
 						<div class="meta">
 							<h3>{post.title}</h3>
 							<span class="details">
