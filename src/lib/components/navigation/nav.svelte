@@ -102,7 +102,7 @@
 			position: fixed;
             display: block;
             top: unset;
-			bottom: 1em;
+			bottom: 1rem;
 			left: 24px;
             padding: 0;
             margin-right: unset;

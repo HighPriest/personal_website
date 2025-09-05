@@ -1,5 +1,5 @@
 <script>
-    import Header from "$lib/components/blog/Blog-Header.svelte";
+    import Footer from "$lib/components/blog/Blog-Footer.svelte";
 </script>
 
-<Header />
+<Footer />

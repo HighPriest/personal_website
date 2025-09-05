@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Footer from '$lib/components/blog/Blog-Footer.svelte';
     import Nav from '$lib/components/navigation/nav.svelte';
     import RouteTransition from '$lib/components/ui/RouteTransition.svelte';
     import {navigating} from '$app/state';
@@ -18,13 +19,14 @@
 </script>
 
 {#if dev}
-<dev.Inspect value={$postStore} name="testing" style="position: fixed; bottom: 0; z-index: 10;"/>
+<dev.Inspect value={$postStore} name="Posts List" style="position: fixed; bottom: 0; z-index: 10;"/>
 <dev.Inspect value={getLocale()} name="Locale" />
 {/if}
 <main id="blog">
     <RouteTransition pagein={navigating.from} pageout={navigating.to}>
         {@render children()}
     </RouteTransition>
+    <Footer title="Kamil Filipek"/>
 </main>
 <Nav />
 
@@ -43,20 +45,19 @@ main {
 }
 
 @media (orientation: portrait) {
-    :global(#image-trim) {
-        display: none;
-    }
-
     main {
         padding: unset;
         margin: unset;
+        margin-bottom: 6rem;
+        padding-bottom: 2rem;
         width: 100%;
     }
-    :global(.tag, .post) {
-        margin: 1rem !important;
-        min-width: 15rem !important; /* TODO: Give it rem units */
-        flex: 1 1 15rem !important;
-    }
+    
+    // :global(.tag, .post) {
+    //     margin: 1rem !important;
+    //     min-width: 15rem !important; /* TODO: Give it rem units */
+    //     flex: 1 1 15rem !important;
+    // }
 }
 
 </style>
