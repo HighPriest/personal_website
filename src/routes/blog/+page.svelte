@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import type { PageData } from "./$types";
 
+	import Highlights from '$lib/components/blog/Blog-Highlights.svelte';
 	import Tag from '$lib/components/blog/BlogCategoryCard.svelte';
 
 	import { trackPageView } from '@lukulent/svelte-umami';
@@ -19,6 +20,7 @@
 	<title>Amun - Blog</title>
 	<meta name="description" content="Welcome to my tech blog, our go-to source for insights on computer tech, cybersecurity & vehicular automation! Lets talk about artificial intelligence, machine learning, and the Internet of Things (IoT). Stay informed about network security, data protection, and the latest innovations in smart technology and autonomous vehicles. Join us as we dissect the future of tech and empower your digital journey with essential knowledge and buzzworthy updates!" />
 </svelte:head>
+<Highlights posts={data.posts} />
 <section id="tags">
 {#each data.tagCards ?? [] as tagCards}
 	<Tag {...tagCards}/>
