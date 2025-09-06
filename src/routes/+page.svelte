@@ -20,14 +20,13 @@
 </video>
 <main>
 	<Card>
-		{#snippet company()}
+		{#snippet front()}
 			<h1>Amun</h1>
 			<p>Tech & Software Development</p>
 		{/snippet}
 
-		{#snippet contact()}
-			<h2>contactⓐⓣamun.pl</h2>
-			<p>{@html m.card_contact_guide()}</p>
+		{#snippet back()}
+			<div><span>contactⓐⓣamun.pl</span>{@html m.card_contact_guide()}</div>
 		{/snippet}
 	</Card>
 </main>
