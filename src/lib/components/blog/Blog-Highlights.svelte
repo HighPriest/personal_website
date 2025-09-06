@@ -80,17 +80,6 @@
 </script>
 
 <div class="blog-highlights">
-	<div class="header">
-		<div class="title-wrapper">
-			<span class="accent"></span>
-			<h2>Gaming</h2>
-		</div>
-		<div class="pager">
-			<span class="icon left"></span>
-			<span class="icon right"></span>
-		</div>
-	</div>
-
 	<div class="content">
 		<!-- Left featured -->
 		{#key (featured = posts[0] ?? placeholders[0])}
@@ -145,51 +134,6 @@
 		flex-direction: column;
 		gap: 1.5rem;
 		width: 100%;
-
-		.header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-
-			.title-wrapper {
-				display: flex;
-				align-items: center;
-				gap: 0.5rem;
-
-				.accent {
-					width: 6px;
-					height: 100%;
-					background-color: #057af0;
-				}
-
-				h2 {
-					font-size: 1.25rem;
-					font-weight: bold;
-				}
-			}
-
-			.pager {
-				display: flex;
-				gap: 0.5rem;
-
-				.icon {
-					width: 10px;
-					height: 10px;
-					background-color: #057af0;
-					mask-size: cover;
-					-webkit-mask-size: cover;
-
-					&.left {
-						mask-image: url('https://assets-ng.maxroll.gg/images/blue-arrow-left.svg?scope=mask');
-						-webkit-mask-image: url('https://assets-ng.maxroll.gg/images/blue-arrow-left.svg?scope=mask');
-					}
-					&.right {
-						mask-image: url('https://assets-ng.maxroll.gg/images/blue-arrow-right.svg?scope=mask');
-						-webkit-mask-image: url('https://assets-ng.maxroll.gg/images/blue-arrow-right.svg?scope=mask');
-					}
-				}
-			}
-		}
 
 		.content {
 			display: flex;
