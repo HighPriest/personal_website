@@ -69,7 +69,7 @@
 	];
 	let featured: Featured = {
 		title: 'Loading...',
-		slug: './',
+		slug: '../',
 		feature_image: '',
 		feature_image_alt: '',
 		updated_at: '',

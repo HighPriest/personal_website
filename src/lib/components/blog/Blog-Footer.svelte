@@ -69,7 +69,6 @@
 		flex-direction: row;
 		justify-content: space-between;
 		/*width: 100%; breaks out of containers width :( */
-		padding: 0 2rem;
 		max-height: 22rem;
 	}
 	#info {
@@ -103,7 +102,6 @@
 	}
 	#background-image {
 		border: 0.1em solid var(--color-accent);
-		padding: 0.2em;
 		position: absolute;
 		width: 100%;
 		height: 100%;
