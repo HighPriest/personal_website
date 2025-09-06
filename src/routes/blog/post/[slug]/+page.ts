@@ -20,7 +20,7 @@ export const load = (async ({ params }) => {
 				 {
 					title: post?.title ? post.title : 'No title',
 					slug: post?.slug!,
-					feature_image: post?.feature_image ? post.feature_image : 'https://amun.pl/eye-of-ra.webp',
+					feature_image: post?.feature_image ? post.feature_image : 'https://amun.pl/media/cyberpunk.jpg',
 					feature_image_alt: post?.feature_image_alt ? post.feature_image_alt : '',
 					updated_at: post?.updated_at!,
 					tags: post?.tags!.map((tag) => tag.name),
@@ -55,7 +55,7 @@ export const load = (async ({ params }) => {
 					title: result.data.title || 'No title',
 					slug: result.data.slug,
 					feature_image: result.data.feature_image
-						?? 'https://amun.pl/eye-of-ra.webp',
+						?? 'https://amun.pl/media/cyberpunk.jpg',
 					feature_image_alt: result.data.feature_image_alt ?? '',
 					updated_at: result.data.updated_at,
 					tags: result.data.tags!.map((tag) => tag.name),

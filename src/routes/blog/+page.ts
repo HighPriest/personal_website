@@ -21,7 +21,7 @@ export const load = (async () => {
 				title: post.title ?? 'No title',
 				slug: post.slug!,
 				published_at: post.published_at!,
-				feature_image: post.feature_image ?? 'https://amun.pl/eye-of-ra.webp',
+				feature_image: post.feature_image ?? 'https://amun.pl/media/cyberpunk.jpg',
 				feature_image_alt: post.feature_image_alt ?? '',
 				authors: post.authors?.map((a) => a.name) || ['Unknown author']
 			})).sort(
@@ -60,7 +60,7 @@ export const load = (async () => {
 				title: post.title ?? 'No title',
 				slug: post.slug!,
 				published_at: post.published_at!,
-				feature_image: post.feature_image ?? 'https://amun.pl/eye-of-ra.webp',
+				feature_image: post.feature_image ?? 'https://amun.pl/media/cyberpunk.jpg',
 				feature_image_alt: post.feature_image_alt ?? '',
 				tags: [], // Wipe tags, so that they can be loaded by hover
 				authors: post.authors?.map((a) => a.name) || ['Unknown author']

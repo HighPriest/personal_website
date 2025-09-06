@@ -38,7 +38,7 @@ main {
     padding: unset; margin: unset;
     // overflow: auto; // disable overflow: auto to make view based transitions work (animated entry)
     max-width: 100lvw;
-    width: 80em;
+    // width: 80em;
     backdrop-filter: blur(2px);
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */

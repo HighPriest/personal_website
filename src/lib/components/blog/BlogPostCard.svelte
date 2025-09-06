@@ -22,8 +22,8 @@
 
 <!--TODO: THESE SHOULDN'T BE LINKS. Because they don't allow selecting contents. -->
 <!--TODO: Find a way to make them something else, which contents can be selectable, but on hover they are still going to prefetch data -->
-<a onclick={() => false} class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Post (${slug})`} href={localizeHref(`/blog/post/${slug}`)}>
-	<!--<img loading="lazy" src={feature_image} alt={feature_image_alt} />-->
+<!--<a onclick={() => false} class="post" data-sveltekit-preload-data="hover" data-umami-event={`Button: Post (${slug})`} href={localizeHref(`/blog/post/${slug}`)}>
+	<!--<img loading="lazy" src={feature_image} alt={feature_image_alt} />
 	<div class="post-text">
 		<div class="info">
 			<p style="font-size: 1rem;">{time}</p>
@@ -37,109 +37,193 @@
 		<p class="excerpt">{@html excerpt}</p>
 	</div>
 	<div>Read more</div>
+</a>-->
+
+<a
+	class="post-card"
+	onclick={() => false}
+	data-sveltekit-preload-data="hover"
+	data-umami-event={`Button: Post (${slug})`}
+	href={localizeHref(`/blog/post/${slug}`)}
+>
+	<figure>
+		<picture>
+			<img src={feature_image} alt={feature_image_alt} />
+		</picture>
+
+		<figcaption>
+			<img src={feature_image} alt="" aria-hidden="true" />
+			<section class="adaptive-glass">
+				<h3>{title}</h3>
+				<span>
+					<date>{time}</date>
+					<author>{authors[0]}</author>
+				</span>
+			</section>
+		</figcaption>
+
+		<!-- Overlay excerpt -->
+		<div class="excerpt-overlay">
+			<p>{excerpt}</p>
+		</div>
+	</figure>
 </a>
 
 <style lang="scss">
-	@keyframes slide-fade-in {
-		from {
-			opacity: 0;
-			box-shadow: none;
-			transform: scale(0.8) translateY(15vh);
+.post-card {
+	display: block;
+	width: 100%;
+	max-width: 22rem;
+	margin: 1rem;
+	text-decoration: none;
+	color: inherit;
+
+	border: 1px solid var(--maxroll-color-grey-1, #333);
+	border-radius: 12px;
+	overflow: hidden;
+	background: var(--maxroll-color-dark-5, #0a0a0a);
+	transition: all 0.25s ease;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+	position: relative;
+
+	&:hover {
+		transform: translateY(-4px);
+		border-color: var(--highlight-color, #057af0);
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+		background: var(--maxroll-color-dark-4, #151515);
+
+		// reveal excerpt
+		.excerpt-overlay {
+			opacity: 1;
+			visibility: visible;
 		}
 	}
-	.title {
-	}
-	.post {
-		// Thanks to Adam Argyle: https://codepen.io/argyleink/pen/VwNMLQN
-		@media (prefers-reduced-motion: no-preference) {
-			@supports (animation-timeline: view()) {
-				animation: slide-fade-in both;
-				animation-timeline: view();
-				animation-range: contain -30% contain 50%;
-			}
-		}
+}
+
+figure {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+
+	aspect-ratio: 4 / 5;
+
+  picture {
+    min-height: 33%;
+  }
+
+	& img {
 		display: block;
-		position: relative;
-		flex: 1 1 20rem;
-		z-index: 0;
-		min-width: 18rem; /* TODO: Give it rem units */
-		max-width: auto;
-		padding: 2rem;
-		margin: 2rem;
-		border-radius: 10%;
-		//-webkit-box-shadow: 0 1em 1em 0 rgba(15, 15, 20, 0.2);
-		//box-shadow: 0 1em 1em 0 rgba(15, 15, 20, 0.2);
-		-webkit-transition: var(--transition-time) ease-in-out;
-		transition: var(--transition-time) ease-in-out;
-		&:hover {
-			-webkit-transform: translate(5px, 1px);
-			transform: translate(5px, 1px);
+		width: 100%;
+		max-height: 10em;
+		object-fit: cover;
+	}
+}
 
-			&::after {
-				box-shadow:
-				8px 6px 2px rgba(0,0,0, 0.8) inset;
-			}
-			&::before {
-				margin: 0.6rem;
-			}
+figcaption {
+	display: grid;
+	grid: [stack] 1fr / [stack] 1fr;
+	position: relative;
+	flex: 1;
 
-			.info * {
-				color: var(--color-accent);
-			}
-		}
+	& > * {
+		grid-area: stack;
+	}
 
-		&::before {
-			content: '';
-			position: absolute;
-			margin: 1.2rem;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			border-radius: 1em;
-			z-index:-1;
-			background: gold;
-			opacity: 0.8;
-			filter: blur(6px);
-			transition: linear var(--transition-time);
-		}
+	& > img {
+		position: absolute;
+		inset: 0;
+		transform: scaleY(-1);
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+		opacity: 0.3;
+	}
 
-		&::after {
-			content: '';
-			position: absolute;
-			margin: 10px;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
-			border-radius: 1em;
-			background-color: #111;
-			box-shadow:
-				3px 4px 2px rgba(150,150,150, 0.2) inset;
-			//background-image: linear-gradient(159deg,var(--tertiary-color) 0%,rgba(var(--rgba-tertiary-color),.9) 50%,rgba(var(--rgba-tertiary-color),.6) 90%,var(--fourth-color) 100%);
-			transition: ease-out var(--transition-time);
-			z-index: -1;
-		}
+	& > section {
+		z-index: 1;
+		padding: 1.25rem;
+		display: grid;
+		gap: 0.75rem;
+		color: var(--on-glass-primary, #111);
 
-		img {
-			position: absolute;
-			z-index: -2;
-			width: 100%;
-			height: 100%;
-			top: 0;
-			left: 0;
-			object-fit: cover;
-		}
-
-		p {
-			color: var(--pure-white);
-		}
-
-		.info {
-			display: flex;
-			justify-content: space-between;
-			border-bottom: 1px solid var(--color-accent);
-			margin-bottom: 0.5em;
+		@media (prefers-color-scheme: dark) {
+			text-shadow: 0 1px 0 hsl(0 0% 0% / 20%);
 		}
 	}
+
+	h3 {
+		font-size: clamp(1.25rem, calc(1rem + 1vw), 1.75rem);
+		margin: 0;
+		color: var(--maxroll-color-white-1, #fff);
+	}
+
+	date {
+		color: var(--on-glass-secondary, #555);
+		font-size: 0.9rem;
+	}
+
+	author {
+		position: relative;
+		left: 1rem;
+		font-size: 0.9rem;
+		color: var(--on-glass-secondary, #555);
+	}
+}
+
+.adaptive-glass {
+	--glass-lightness: 100%;
+	--glass-alpha: 50%;
+	font-size: 1rem;
+
+	background: hsl(0 0% var(--glass-lightness) / var(--glass-alpha));
+	backdrop-filter: blur(40px);
+
+	@media (prefers-color-scheme: dark) {
+		--glass-lightness: 0%;
+	}
+
+	@media (prefers-reduced-transparency: reduce) {
+		--glass-alpha: 85%;
+	}
+
+	@supports not (backdrop-filter: blur(1px)) {
+		background: hsl(0 0% var(--glass-lightness) / 90%);
+	}
+}
+
+// Excerpt overlay
+.excerpt-overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 1.5rem;
+	color: var(--maxroll-color-white-1, #fff);
+	font-size: 1rem;
+	line-height: 1.4;
+
+	background: rgba(0, 0, 0, 0.7);
+	backdrop-filter: blur(20px);
+
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  z-index: 1;
+
+	p {
+		margin: 0;
+		max-height: 80%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 6;
+		-webkit-box-orient: vertical;
+	}
+}
 </style>
+

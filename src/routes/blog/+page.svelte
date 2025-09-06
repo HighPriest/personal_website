@@ -64,7 +64,7 @@
 	#tags {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: row;
+		flex-direction: column;
 		justify-content: center;
 	}
 </style>

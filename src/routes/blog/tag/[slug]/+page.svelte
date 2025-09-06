@@ -36,7 +36,7 @@ TODO: Bring this back as a Nav view with breadcrumbs
 	#posts {
 		display: flex;
 		flex-wrap: wrap;
-		flex-direction: column;
-		justify-content: center;
+		flex-direction: row;
+		justify-content: space-evenly;
 	}
 </style>
