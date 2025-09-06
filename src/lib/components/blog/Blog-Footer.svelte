@@ -51,6 +51,18 @@
 		}
 	}
 
+	@media (orientation: portrait) {
+		#info, #info > h1 {
+			padding: unset !important;
+		}
+		#info > h1{
+			margin-bottom: 2em;	
+		}
+		#image-trim {
+			display: none;
+		}
+	}
+
 	footer {
 		position: relative;
 		display: flex;
@@ -62,6 +74,7 @@
 	}
 	#info {
 		padding: 4rem 2rem;
+		width: 100%;
 		h1 {
 			text-align: center;
 			font-weight: bold;
@@ -100,7 +113,6 @@
 		background-image: url('/media/cyberpunk.jpg');
 		background-position: center;
 		background-size: cover;
-		z-index: -1;
 	}
 
 	#background-image::after {
@@ -122,6 +134,7 @@
 	#image-trim {
 		margin-top: -12rem;
 		overflow: hidden;
+		z-index: 1;
 		img {
 			height: 50rem;
 			margin-bottom: -10rem;
