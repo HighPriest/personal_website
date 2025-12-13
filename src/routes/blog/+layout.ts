@@ -5,7 +5,7 @@ import { TSGhostContentAPI, type Tag } from "@ts-ghost/content-api";
 import { tagStore } from "$lib";
 import { get } from 'svelte/store';
 
-const GHOST_URL = 'https://ghost.amun.pl';
+const GHOST_URL = 'https://amun.pl';
 const GHOST_KEY = 'e701b4bd9cb5352d3dc49c381b';
 const GHOST_VERSION = 'v5.0';
 
