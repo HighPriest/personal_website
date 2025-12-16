@@ -18,7 +18,7 @@
 	import Modal from '$lib/components/Modal.svelte';
 
 	import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
-	import { error } from 'console';
+	//import { error } from 'console';
 	let { data }: PageProps = $props();
 
 	let modalContents: string | undefined = $state(undefined);
