@@ -341,8 +341,7 @@
 		</ul>
 	</div>
 
-	<aside id="map-of-values">
-		<div>
+		<div id="map-of-values">
 			<!-- TODO: Add a hover notice, that it might be difficult to map your own config -->
 			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now -->
 			<div>
@@ -405,6 +404,8 @@
 				<!-- Tworzy linijkę dla każdego translate config.from -->
 				<!-- Daje możliwość zmiany wartości Translate to -->
 				<!-- Datalist opcji jest brany z Translate to -->
+				<details>
+				<summary style="cursor: pointer; font-weight: 600; margin: .25rem 0;">Click to open Map of callouts</summary>
 				{#each configs.from! as pacenote}
 					{#if !isNaN(pacenote.id)}
 						{#if (_currentNote = maps
@@ -427,6 +428,7 @@
 					{/if}
 					{void (_currentNote = undefined)}
 				{/each}
+				</details>
 				<datalist id="id_new">
 					{#each data.configsParsed
 						.find((element) => element.name == settings.to.name)
@@ -438,17 +440,20 @@
 				</datalist>
 			</div>
 		</div>
-	</aside>
 </article>
 
 <style lang="scss">
 	article {
 		width: 100%;
+		max-width: fit-content;
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
 		align-content: space-between;
 		justify-content: center;
+		> div {
+			margin: 2rem;
+		}
 	}
 
 	#map-of-values {
@@ -478,6 +483,7 @@
 		border-color: #d1d5db;
 		background-color: #f9fafb;
 		padding: 1.5rem;
+		margin: auto;
 		text-align: center;
 		transition: color, background-color, border-color, text-decoration-color, fill, stroke;
 		transition-duration: 0.5s;
