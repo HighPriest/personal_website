@@ -11,5 +11,7 @@
   "codriver_translator_map": "Edytowalna mapa między wartościami",
   "codriver_translator_download": "Zapisz przetłumaczone notatki!",
   "codriver_translator_pacenote_upload_box": "Upuść tutaj folder z notatkami<br><code>RBR\\Plugins\\NGPCarMenu\\MyPacenotes</code><br><br>Lub kliknij aby wybrać pojedyńcze notatki<br>",
-  "codriver_translator_config_upload_box": "Upuść tutaj folder z aktualną konfiguracją<br><code>RBR\\Plugins\\Pacenote\\config</code><br><br>"
+  "codriver_translator_config_upload_box": "Upuść tutaj folder z aktualną konfiguracją<br><code>RBR\\Plugins\\Pacenote\\config</code><br><br>",
+  "codriver_translator_pacenotes": "Tutaj możesz załadować swoje notatki, które chcesz przetłumaczyć na inny standard",
+  "codriver_translator_config": "Tutaj możesz dodać swój aktualny config, jeżeli żaden z zawartych presetów do niego nie pasuje"
 }

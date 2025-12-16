@@ -290,14 +290,15 @@
 {/if}
 
 <h1>Virtual CoDriver</h1>
+<p>{@html m.codriver_translator_subtitle()}</p>
 
 <article>
 	<div style="max-width: 25em;">
-		<p>{@html m.codriver_translator_subtitle()}</p>
 		<form onsubmit={handleSubmit}>
 			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
 			<!-- TODO: Make it also accept individual files -->
 			<Dropzone containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
+				<p>{@html m.codriver_translator_pacenotes()}</p>
 				<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
 					<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
 					<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
@@ -345,7 +346,6 @@
 			<!-- TODO: Add a hover notice, that it might be difficult to map your own config -->
 			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now -->
 			<div>
-				<p>Upload your current, personal config:</p>
 				<Dropzone     
 					on:dragover={() => {
 						const dz = document.querySelector('.customDropzone');
@@ -360,6 +360,7 @@
 						if (dz) dz.classList.remove('dragover');
 					}}
 					containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handleConfigFilesUpload} preventDropOnDocument={true} noClick={true} accept=".ini">
+					<p>{@html m.codriver_translator_config()}</p>
 					<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
 						<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
 						<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
