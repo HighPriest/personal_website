@@ -45,6 +45,7 @@
     "vite-inspector": "^0.1.4",
     "vite-plugin-devtools-json": "^1.0.0"
   },
+  "packageManager": "pnpm@10.33.0",
   "pnpm": {
     "onlyBuiltDependencies": [
       "@parcel/watcher",

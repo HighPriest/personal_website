@@ -3,7 +3,9 @@ FROM node:25-slim AS base
 # Set up pnpm in the base layer so it's available in all subsequent stages.
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+COPY package.json .
+# get out pnpm version from package.json and install that
+RUN PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@')[1].split('+')[0]") && npm install --global pnpm@$PNPM_VERSION
 
 # --- Builder Stage ---
 # This stage installs dependencies and builds the application.
