@@ -1,5 +1,5 @@
 # Use a specific version for reproducible builds
-FROM node:24-slim AS base
+FROM node:25-slim AS base
 # Set up pnpm in the base layer so it's available in all subsequent stages.
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
