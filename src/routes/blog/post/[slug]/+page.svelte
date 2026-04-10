@@ -5,7 +5,7 @@
 
 	import '$lib/components/Ghost/Post.scss';
 
-	import { trackPageView } from '@lukulent/svelte-umami';
+	//import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
 	// Create Tags List
@@ -30,7 +30,7 @@
 		script2.referrerPolicy="no-referrer";
 		document.head.appendChild(script2);
 
-		trackPageView({url: page.url.pathname });
+		//trackPageView({url: page.url.pathname });
 	})
 
 	// TODO: ?Add this type of fancy content list?

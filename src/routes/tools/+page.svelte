@@ -2,9 +2,9 @@
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
 
-    import { trackPageView } from '@lukulent/svelte-umami';
+    //import { trackPageView } from '@lukulent/svelte-umami';
 
     onMount(() => {
-		trackPageView({url: page.url.pathname });
+		//trackPageView({url: page.url.pathname });
 	})
 </script>

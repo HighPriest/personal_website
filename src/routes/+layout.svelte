@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { UmamiAnalytics } from '@lukulent/svelte-umami';
+	//import { UmamiAnalytics } from '@lukulent/svelte-umami';
 	let { children } = $props();
 
 	// Translation stuff
@@ -7,14 +7,14 @@
 	import { page } from '$app/state';
 </script>
 
-<UmamiAnalytics
+<!--<UmamiAnalytics
 	websiteID="e1237ef3-a2b6-4163-9057-fbde1c4faef4"
 	srcURL="https://umami.amun.pl/script.js"
 	configuration={{
 		'data-domains': 'amun.pl',
 		'data-auto-track': false
 	}}
-/>
+/>-->
 
 {@render children()}
 <!--<Background />-->

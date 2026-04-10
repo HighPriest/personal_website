@@ -9,8 +9,8 @@
 		);
 
 		if (buttonElement) {
-			chatButton = buttonElement;
-			buttonElement.addEventListener('click', () => umami.track('Chat button'));
+			//chatButton = buttonElement;
+			//buttonElement.addEventListener('click', () => umami.track('Chat button'));
 		}
 	});
 </script>

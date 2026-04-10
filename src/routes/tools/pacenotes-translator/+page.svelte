@@ -17,7 +17,7 @@
 	import Dropzone from 'svelte-file-dropzone';
 	import Modal from '$lib/components/Modal.svelte';
 
-	import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
+	//import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
 	//import { error } from 'console';
 	let { data }: PageProps = $props();
 
@@ -65,7 +65,7 @@
 	let _currentNote: string[] | undefined;
 
 	onMount(() => {
-		trackPageView({url: page.url.pathname });
+		//trackPageView({url: page.url.pathname });
 	})
 
 	$effect(() => {
@@ -76,7 +76,7 @@
 				formData.append('pacenotes', file);
 			}
 
-			trackEvent('RBR Files Upload', { type: 'Pacenotes'});
+			//trackEvent('RBR Files Upload', { type: 'Pacenotes'});
 
 			fetch('/tools/pacenotes-translator?/loadPacenotes', {
 				method: 'POST',
@@ -99,7 +99,7 @@
 				formData.append('config', file);
 			}
 
-			trackEvent('RBR Files Upload', { type: 'Config'});
+			//trackEvent('RBR Files Upload', { type: 'Config'});
 
 			fetch('/tools/pacenotes-translator?/loadConfig', {
 				method: 'POST',

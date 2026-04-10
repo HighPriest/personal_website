@@ -6,11 +6,11 @@
 	import Highlights from '$lib/components/blog/Blog-Highlights.svelte';
 	import Tag from '$lib/components/blog/BlogCategoryCard.svelte';
 
-	import { trackPageView } from '@lukulent/svelte-umami';
+	//import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
 	onMount(() => {
-		trackPageView({url: page.url.pathname });
+		//trackPageView({url: page.url.pathname });
 	})
 
 	$inspect("Tags data: ", data);
