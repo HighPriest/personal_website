@@ -1,5 +1,5 @@
 # Use a specific version for reproducible builds
-FROM node:25-slim AS base
+FROM node:26-slim AS base
 # Set up pnpm in the base layer so it's available in all subsequent stages.
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
@@ -14,7 +14,7 @@ WORKDIR /app
 
 # 1. Copy only dependency-related files first.
 # This layer is only invalidated when dependencies change.
-COPY pnpm-lock.yaml package.json ./
+COPY pnpm-lock.yaml pnpm-workspace.yaml svelte.config.js package.json ./
 
 # 2. Install dependencies.
 # This step is now cached as long as the lockfile doesn't change.
