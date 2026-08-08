@@ -1,6 +1,7 @@
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { sveltekit } from '@sveltejs/kit/vite';
 import devtoolsJson from 'vite-plugin-devtools-json'; // Used for integration with Chrome DevTools
+import { svelteSitemap } from 'svelte-sitemap/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }) => {
@@ -12,7 +13,8 @@ export default defineConfig(({ mode }) => {
 				project: './project.inlang',
 				outdir: './src/lib/paraglide',
 				strategy: ['cookie', 'preferredLanguage', 'baseLocale']
-			})
+			}),
+			svelteSitemap({ domain: 'https://amun.pl' })
 		],
 		esbuild: {
 			pure: mode === 'production' ? ['console.debug'] : []
