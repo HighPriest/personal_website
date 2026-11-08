@@ -6,7 +6,9 @@ import svelte from 'eslint-plugin-svelte';
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import ts from 'typescript-eslint';
-import svelteConfig from './svelte.config.js';
+import { loadConfig } from '@sveltejs/load-config';
+
+const svelteConfig = (await loadConfig('./', { traverse: false }))?.config;
 
 const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
@@ -37,11 +39,17 @@ export default defineConfig(
 		}
 	},
 	{
-		// Override or add rule settings here, such as:
-		// 'svelte/button-has-type': 'error'
-		rules: {}
+		rules: {
+			// Debug output goes through #lib/debug, which is compiled out of production builds
+			'no-console': ['error', { allow: ['warn', 'error'] }],
+			// Internal links go through Paraglide's localizeHref, which adds the locale prefix; the rule
+			// only accepts SvelteKit's resolve() as the outermost call and can't see through it. The
+			// site has no base path. goto() and history calls stay checked.
+			'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }]
+		}
 	},
 	{
-		ignores: ['build/', '.svelte-kit/', 'dist/']
+		// static/ holds files served as they are (images, robots.txt)
+		ignores: ['build/', '.svelte-kit/', 'dist/', 'static/']
 	}
 );

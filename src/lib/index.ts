@@ -1,7 +1,4 @@
-// place files you want to import through the `$lib` alias in this folder.
-
-import type { Post, Tag } from "@ts-ghost/content-api";
-import { writable } from 'svelte/store';
-
-export const postStore = writable<Post[]>([]);
-export const tagStore = writable<Tag[]>([]);
+// Place shared modules under src/lib and import them by path, for example `#lib/blog/types.js`.
+// (The old client-side Ghost stores lived here; the blog now reads Ghost on the server,
+// #lib/server/ghost.)
+export {};

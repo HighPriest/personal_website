@@ -1,4 +1,6 @@
 node_modules
+# pnpm puts its store inside the checkout when the project is on its own filesystem (CI jobs)
+.pnpm-store/
 
 # Output
 .output
@@ -7,6 +9,8 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+# CI copies the tested build here for the image
+/prebuilt
 
 # OS
 .DS_Store
@@ -24,3 +28,11 @@ vite.config.ts.timestamp-*
 # Paraglide
 src/lib/paraglide
 project.inlang/cache/
+
+# Claude workflow session state
+.claude/session.md
+
+# Playwright
+/test-results
+/playwright-report
+/blob-report

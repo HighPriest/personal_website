@@ -1,62 +1,83 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { page } from '$app/state';
-	import type { PageData } from "./$types";
+	import Seo from '#lib/components/Seo.svelte';
+	import { localizeHref } from '#lib/paraglide/runtime.js';
+	import * as m from '#lib/paraglide/messages.js';
+	import Kicker from '#lib/components/Kicker.svelte';
+	import PostMeta from '#lib/components/blog/PostMeta.svelte';
+	import '#lib/components/blog/koenig-cards.css';
+	import { postContent } from '#lib/blog/post-content.js';
+	import type { PageData } from './$types';
 
-	import '$lib/components/Ghost/Post.scss';
-
-	//import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
-	// Create Tags List
-	/*data.post?.tags.forEach(tag => {
-			addTag(tag);
-	});*/
-
-	$inspect("Post Read data: ", data);
-
-	onMount(() => {
-		const script = document.createElement("script");
-		script.src = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js";
-		script.integrity = "sha512-9khQRAUBYEJDCDVP2yw3LRUQvjJ0Pjx0EShmaQjcHa6AXiOv6qHQu9lCAIR8O+/D8FtaCoJ2c0Tf9Xo7hYH01Q==";
-		script.crossOrigin = "anonymous";
-		script.referrerPolicy="no-referrer";
-		document.head.appendChild(script);
-
-		const script2 = document.createElement("script");
-		script2.src = "https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js";
-		script2.integrity = "sha512-SkmBfuA2hqjzEVpmnMt/LINrjop3GKWqsuLSSB3e7iBmYK7JuWw4ldmmxwD9mdm2IRTTi0OxSAfEGvgEi0i2Kw==";
-		script2.crossOrigin = "anonymous";
-		script2.referrerPolicy="no-referrer";
-		document.head.appendChild(script2);
-
-		//trackPageView({url: page.url.pathname });
-	})
-
-	// TODO: ?Add this type of fancy content list?
+	const post = $derived(data.post);
 </script>
-<style lang="scss">
-	//@import '$lib/components/Ghost/Post.css';
-	//@import '$lib/components/Ghost/Prism-tomorrow-default.css';
-</style>
-<!--Prism is for code snippets -->
-<svelte:head>
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" integrity="sha512-vswe+cgvic/XBoF1OcM/TeJ2FW0OofqAVdCZiEYkd6dwGXthvkSFWOoGGJgS2CW70VK5dQM5Oh+7ne47s74VTg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	{#await data.post}
-	{:then post}
-	<title>{post?.title}</title>
-	<meta name="description" content="{post?.excerpt}"/>
-	{/await}
-</svelte:head>
 
-{#await data.post}
-<p>...loading</p>
-{:then post}
-<h1>{post?.title ?? ''}</h1>
-{@html post?.html ?? ''}
-{#if post && post.tags}
-<!-- TODO: Create tags creation -->
+{#if post}
+	<Seo title="{post.title} · Amun" description={post.excerpt} {post} />
+	<article {@attach postContent}>
+		<header>
+			<Kicker>
+				<a href={localizeHref('/blog')}>{m.nav_blog()}</a>
+				{#each post.tags as tag (tag.slug)}
+					/ <a href={localizeHref(`/blog/tag/${tag.slug}`)}>{tag.name}</a>
+				{/each}
+			</Kicker>
+			<h1>{post.title}</h1>
+			<PostMeta
+				date={post.publishedAt ?? post.updatedAt ?? undefined}
+				readingTime={post.readingTime ?? undefined}
+				authors={post.authors}
+			/>
+		</header>
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- post HTML comes from our own Ghost instance, authored by the site owner -->
+		{@html post.html}
+	</article>
 {/if}
-{/await}
 
-<!-- TODO: Add comments section-->
+<style>
+	/* The post is the page, not a card: no card frame, a comfortable reading width. */
+	article {
+		max-width: 44rem;
+		margin-inline: auto;
+		padding: 1rem 0 0;
+		background: none;
+		border: 0;
+		clip-path: none;
+	}
+	article:is(:hover, :focus-within) {
+		background: none;
+		box-shadow: none;
+	}
+	header {
+		margin: 0 0 2rem;
+		padding: 0;
+		background: none;
+		border: 0;
+	}
+	h1 {
+		font-size: clamp(2rem, 5vw, 3rem);
+		line-height: 1.05;
+	}
+	/* Section headings in the post get a small notched marker in the viewport-fixed gradient
+	   (not the big title inside a Koenig header card). */
+	article :global(h2:not(.kg-header-card-heading)::before) {
+		content: '';
+		display: inline-block;
+		width: 0.5em;
+		height: 0.5em;
+		margin-right: 0.45em;
+		vertical-align: 0.12em;
+		background: var(--fx) fixed;
+		clip-path: polygon(0 0, 100% 0, 100% 100%, 30% 100%, 0 70%);
+	}
+	article :global(:is(p, li)) {
+		font-size: 1.0625rem;
+		line-height: 1.7;
+	}
+	article :global(figcaption) {
+		font-family: var(--f-mono);
+		font-size: 0.75rem;
+		color: var(--c-muted);
+	}
+</style>

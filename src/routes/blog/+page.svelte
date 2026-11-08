@@ -1,70 +1,41 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { page } from '$app/state';
-	import type { PageData } from "./$types";
+	import Seo from '#lib/components/Seo.svelte';
+	import * as m from '#lib/paraglide/messages.js';
+	import Kicker from '#lib/components/Kicker.svelte';
+	import PostCard from '#lib/components/blog/PostCard.svelte';
+	import PostGrid from '#lib/components/blog/PostGrid.svelte';
+	import TagList from '#lib/components/blog/TagList.svelte';
+	import type { PageData } from './$types';
 
-	import Highlights from '$lib/components/blog/Blog-Highlights.svelte';
-	import Tag from '$lib/components/blog/BlogCategoryCard.svelte';
-
-	//import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
-	onMount(() => {
-		//trackPageView({url: page.url.pathname });
-	})
-
-	$inspect("Tags data: ", data);
+	// The featured section in the server's order (flagged posts by publication date, then the
+	// newest others): one big card, then four smaller ones.
+	const posts = $derived(data.posts);
 </script>
 
-<svelte:head>
-	<title>Amun - Blog</title>
-	<meta name="description" content="Welcome to my tech blog, our go-to source for insights on computer tech, cybersecurity & vehicular automation! Lets talk about artificial intelligence, machine learning, and the Internet of Things (IoT). Stay informed about network security, data protection, and the latest innovations in smart technology and autonomous vehicles. Join us as we dissect the future of tech and empower your digital journey with essential knowledge and buzzworthy updates!" />
-</svelte:head>
-<h2>Featured</h2>
-<Highlights posts={data.posts} />
-<section id="tags">
-	<br>
-	<h2>Categories</h2>
-{#each data.tagCards ?? [] as tagCards}
-	<Tag {...tagCards}/>
-{/each}
-</section>
+<Seo title="{m.blog_title()} · Amun" description={m.door_blog_text()} />
 
-<style lang="scss">
-/*	@font-face {
-		src: url("https://www.axis-praxis.org/fonts/webfonts/MetaVariableDemo-Set.woff2")
-			format("woff2");
-		font-family: "Meta";
-		font-style: normal;
-		font-weight: normal;
-	}
-	h2 {
-		transition: all 0.5s;
-		-webkit-text-stroke: 2px #d6f4f4;
-		font-variation-settings: "wght" 900, "ital" 1;
-		font-size: 10rem;
-		text-align: center;
-		color: transparent;
-		font-family: "Meta", sans-serif;
-		text-shadow: 10px 10px 0px #07bccc, 15px 15px 0px #e601c8,
-			20px 20px 0px #e9019a, 25px 25px 0px #f40468, 45px 45px 18px #482896;
-		cursor: default;
-		&:hover {
-			font-variation-settings: "wght" 300, "ital" 1;
-			text-shadow: 4px 4px 0px #07bccc;
-		}
-	}*/
-	/*h2 {
-		font-family: cursive;
-		text-align: left;
-		font-weight: normal;
-		font-size: 5rem;
-		color: var(--heading-color);
-	}*/
-	#tags {
-		display: flex;
-		flex-wrap: wrap;
-		flex-direction: column;
-		justify-content: center;
+<header>
+	<Kicker>{m.nav_blog()}</Kicker>
+	<h1>{m.blog_title()}</h1>
+</header>
+
+<TagList tags={data.tags} />
+
+{#if posts.length}
+	<PostCard post={posts[0]} featured />
+	<PostGrid>
+		{#each posts.slice(1) as post (post.slug)}
+			<PostCard {post} />
+		{/each}
+	</PostGrid>
+{:else}
+	<p>{m.blog_empty()}</p>
+{/if}
+
+<style>
+	header {
+		padding-top: 1rem;
 	}
 </style>

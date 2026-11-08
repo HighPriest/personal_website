@@ -1,42 +1,39 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { page } from '$app/state';
+	import Seo from '#lib/components/Seo.svelte';
+	import { localizeHref } from '#lib/paraglide/runtime.js';
+	import * as m from '#lib/paraglide/messages.js';
+	import Kicker from '#lib/components/Kicker.svelte';
+	import PostCard from '#lib/components/blog/PostCard.svelte';
+	import PostGrid from '#lib/components/blog/PostGrid.svelte';
+	import TagList from '#lib/components/blog/TagList.svelte';
 	import type { PageData } from './$types';
 
-	import Post from '$lib/components/blog/BlogPostCard.svelte';
-
-	//import { trackPageView } from '@lukulent/svelte-umami';
 	let { data }: { data: PageData } = $props();
 
-	//const posts = data.posts?.filter(post => post.tags?.some(tag => $page.params.slug === tag));
-	const posts = data.posts;
-
-	onMount(() => {
-		//trackPageView({ url: page.url.pathname });
-	});
-
-	$inspect('Post Browse data: ', data);
+	const name = $derived(data.tag.name);
 </script>
 
-<!--
-<Header
-	title={String(
-		page.params.slug.charAt(0).toUpperCase() + String(page.params.slug).slice(1)
-	).replaceAll('-', ' ')}
-/>
-TODO: Bring this back as a Nav view with breadcrumbs
--->
-<section id="posts">
-	{#each posts ?? [] as post}
-		<Post {...post} />
-	{/each}
-</section>
+<Seo title="{name} · {m.blog_title()} · Amun" description={m.blog_tag_description({ tag: name })} />
+
+<header>
+	<Kicker><a href={localizeHref('/blog')}>{m.nav_blog()}</a> / {name}</Kicker>
+	<h1>{name}</h1>
+</header>
+
+<TagList tags={data.tags} current={data.tag.slug} />
+
+{#if data.posts.length}
+	<PostGrid>
+		{#each data.posts as post (post.slug)}
+			<PostCard {post} />
+		{/each}
+	</PostGrid>
+{:else}
+	<p>{m.blog_empty()}</p>
+{/if}
 
 <style>
-	#posts {
-		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
-		justify-content: space-evenly;
+	header {
+		padding-top: 1rem;
 	}
 </style>

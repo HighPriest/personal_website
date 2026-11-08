@@ -1,296 +1,189 @@
-:global(.wx-amun-theme) {
-    /* base colors */
-    --wx-color-primary: var(--color-primary);
-    --wx-color-primary-selected: rgba(var(--color-primary-darker), 0.3);
-    --wx-color-primary-font: var(--color-contrast-higher);
-    --wx-color-secondary: transparent;
-    --wx-color-secondary-hover: rgba(var(--color-accent-darker) 0.12);
-    --wx-color-secondary-font: var(--color-accent);
-    --wx-color-secondary-font-hover: var(--color-accent-darker);
-    --wx-color-secondary-border: var(--color-accent);
-    --wx-color-secondary-border-disabled: #9fa1ae;
+// Theme controls: the Neon night palette, the viewport-fixed gradients, fonts and the type scale,
+// and how they map onto Pico's variables.
+// app.scss loads this right after Pico, so these rules win over Pico's own theme.
 
-    --wx-color-success: #77d257;
-    --wx-color-warning: #fcba2e;
-    --wx-color-info: var(--wx-color-primary);
-    --wx-color-danger: #fe6158;
-    --wx-color-disabled: #384047;
-    --wx-color-disabled-alt: #44474a;
+// ── Brand tokens ─────────────────────────────────────────────────────────────────────────────
+// Neon values (--c-neon-*) are for decoration only: glows, borders, fills with dark ink. Text
+// uses --c-text, --c-muted, --c-head and --c-link, each checked to 4.5:1 (e2e/theme.test.ts).
+// --c-fx-* are the ends of the text-safe gradient, so they are checked too.
 
-    --wx-color-font: var(--color-contrast-higher);
-    --wx-color-font-alt: var(--color-contrast);
-    --wx-color-font-disabled: var(--color-contrast-lower);
-    --wx-color-link: var(--wx-color-primary);
-
-    --wx-background: var(--color-bg);
-    --wx-background-alt: var(--color-bg-lighter);
-    --wx-background-hover: var(--color-accent-darker);
-    /* end base colors */
-
-    /* font */
-    --wx-font-family: "Inter", ui-sans-serif, sans-serif;
-    --wx-font-size: 14px;
-    --wx-line-height: 20px;
-    --wx-font-size-md: 14px;
-    --wx-line-height-md: 24px;
-    --wx-font-size-hd: 16px;
-    --wx-line-height-hd: 30px;
-    --wx-font-size-sm: 12px;
-    --wx-line-height-sm: 16px;
-    --wx-font-weight: 400;
-    --wx-font-weight-md: 600;
-    --wx-font-weight-b: 700;
-    /* end font */
-
-    /* icons */
-    --wx-icon-color: #c0c3ce;
-    --wx-icon-size: var(--wx-line-height);
-    --wx-icon-border-radius: 2px;
-    /* end icons */
-
-    /* other */
-    --wx-border: 1px solid #384047;
-    --wx-border-radius: 3px;
-    --wx-radius-major: 6px;
-
-    --wx-border-light: 1px solid #384047;
-    --wx-border-medium: 1px solid #384047;
-
-    --wx-shadow-light: 0px 4px 20px 0px rgba(44, 47, 60, 0.12);
-    --wx-shadow-medium: none;
-    --wx-box-shadow: 0px 4px 48px rgba(44, 47, 60, 0.18);
-    --wx-box-shadow-strong: 0px 4px 48px rgba(44, 47, 60, 0.18),
-        0px 4px 8px rgba(14, 14, 15, 0.3);
-
-    --wx-padding: 8px;
-    /* end other */
-
-    /* field */
-    --wx-field-gutter: 16px;
-    --wx-field-width: 400px;
-    /* end field */
-
-    /* input */
-    --wx-input-font-family: var(--wx-font-family);
-    --wx-input-font-size: var(--wx-font-size);
-    --wx-input-line-height: var(--wx-line-height);
-    --wx-input-font-weight: var(--wx-font-weight);
-    --wx-input-text-align: left;
-    --wx-input-font-color: var(--wx-color-font);
-    --wx-input-background: var(--wx-background);
-    --wx-input-background-disabled: var(--wx-color-disabled);
-    --wx-input-placeholder-color: var(--wx-color-font-alt);
-    --wx-input-border: var(--wx-border);
-    --wx-input-border-focus: 1px solid var(--wx-color-primary);
-    --wx-input-border-disabled: var(--wx-border);
-    --wx-input-border-radius: 3px;
-    --wx-input-height: 32px;
-    --wx-input-width: 100%;
-    --wx-input-padding: 5px 8px;
-    --wx-input-icon-indent: 6px;
-    --wx-input-icon-color: var(--wx-icon-color);
-    --wx-input-icon-size: var(--wx-icon-size);
-    /* end input */
-
-    /* multi combo */
-    --wx-multicombo-tag-gap: 3px;
-    --wx-multicombo-tag-border: none;
-    --wx-multicombo-tag-border-radius: var(--wx-input-border-radius);
-    --wx-multicombo-tag-pading: 2px 8px;
-    --wx-multicombo-tag-background: var(--wx-background-alt);
-    /* end multi combo */
-
-    /* checkbox and radio */
-    --wx-checkbox-height: var(--wx-line-height);
-    --wx-checkbox-size: var(--wx-checkbox-height);
-    --wx-checkbox-border-width: 2px;
-    --wx-checkbox-border-color: var(--wx-color-font-alt);
-    --wx-checkbox-border-color-disabled: var(--wx-color-disabled);
-    --wx-checkbox-border-radius: var(--wx-input-border-radius);
-    --wx-checkbox-font-family: var(--wx-font-family);
-    --wx-checkbox-font-size: var(--wx-font-size);
-    --wx-checkbox-line-height: var(--wx-line-height);
-    --wx-checkbox-font-weight: var(--wx-font-weight);
-    --wx-checkbox-font-color: var(--wx-color-font);
-    /* end checkbox and radio */
-
-    /* label */
-    --wx-label-width: 100px;
-    --wx-label-margin: 0 0 4px;
-    --wx-label-padding: 0;
-    --wx-label-font-family: var(--wx-font-family);
-    --wx-label-font-size: var(--wx-font-size);
-    --wx-label-line-height: var(--wx-line-height);
-    --wx-label-font-weight: var(--wx-font-weight-md);
-    --wx-label-font-color: var(--wx-color-font);
-    /* end label */
-
-    /* button */
-    --wx-button-font-family: var(--wx-font-family);
-    --wx-button-font-size: var(--wx-font-size-md);
-    --wx-button-line-height: var(--wx-line-height);
-    --wx-button-font-weight: var(--wx-font-weight-md);
-    --wx-button-text-transform: none;
-    --wx-button-background: var(--wx-background-alt);
-    --wx-button-font-color: var(--wx-color-font);
-    --wx-button-danger-font-color: #fff;
-    --wx-button-border: 1px solid transparent;
-    --wx-button-border-radius: var(--wx-border-radius);
-    --wx-button-height: 32px;
-    --wx-button-padding: 5px 16px;
-    --wx-button-icon-indent: 5px;
-    --wx-button-icon-size: 20px;
-    /* end button */
-
-    /* segmented */
-    --wx-segmented-background: var(--wx-background-alt);
-    --wx-segmented-background-hover: var(--wx-background-hover);
-    --wx-segmented-border: none;
-    --wx-segmented-border-radius: 6px;
-    --wx-segmented-padding: 0px;
-    /* end segmented */
-
-    /* tabs */
-    --wx-tabs-background: var(--wx-background);
-    --wx-tabs-background-hover: transparent;
-    --wx-tabs-hover-border: #9fa1ae;
-    --wx-tabs-border-width: 1px;
-    --wx-tabs-border-radius: var(--wx-border-radius);
-    --wx-tabs-divider-width: 1px;
-    --wx-tabs-divider-height: 60%;
-    --wx-tabs-divider-color: transparent;
-    --wx-tabs-cell-min-width: 100px;
-    --wx-tabs-active-background: transparent;
-    --wx-tabs-active-color: var(--wx-color-primary);
-    --wx-tabs-active-border: var(--wx-tabs-active-color);
-    /* end tabs */
-
-    /* slider */
-    --wx-slider-height: 14px;
-    --wx-slider-primary: var(--wx-color-primary);
-    --wx-slider-background: var(--wx-background-alt);
-    --wx-slider-track-height: 4px;
-    --wx-slider-track-border-radius: 2px;
-    --wx-slider-thumb-size: var(--wx-slider-height);
-    --wx-slider-thumb-border: none;
-    --wx-slider-thumb-border-disabled: 1px solid var(--wx-color-disabled);
-    --wx-slider-thumb-shadow: none;
-    --wx-slider-label-margin: 0 0 5px;
-    --wx-slider-label-font-family: var(--wx-font-family);
-    --wx-slider-label-font-size: var(--wx-font-size);
-    --wx-slider-label-line-height: var(--wx-line-height);
-    --wx-slider-label-font-weight: var(--wx-font-weight-md);
-    --wx-slider-label-font-color: var(--wx-color-font);
-    /* end slider */
-
-    /* switch */
-    --wx-switch-primary: var(--wx-color-primary);
-    --wx-switch-background: #384047;
-    --wx-switch-width: 48px;
-    --wx-switch-height: 24px;
-    --wx-switch-border-width: 0px;
-    --wx-switch-border-color: transparent;
-    --wx-switch-border-color-disabled: transparent;
-    --wx-switch-thumb-offset: 1px;
-    --wx-switch-thumb-border: none;
-    --wx-switch-thumb-border-disabled: 1px solid rgba(255, 255, 255, 0.7);
-    --wx-switch-thumb-background: rgba(255, 255, 255, 0.9);
-    --wx-switch-thumb-background-disabled: var(--wx-color-disabled);
-    --wx-switch-thumb-shadow: none;
-    /* end switch */
-
-    /* popup and dropdown */
-    --wx-popup-z-index: 100;
-    --wx-popup-background: var(--wx-background);
-    --wx-popup-shadow: var(--wx-shadow-light);
-    --wx-popup-border: 1px solid rgba(255, 255, 255, 0.26);
-    --wx-popup-border-radius: var(--wx-border-radius);
-    /* end popup and dropdown */
-
-    /* modal */
-    --wx-modal-z-index: 1000;
-    --wx-modal-background: var(--wx-background);
-    --wx-modal-shadow: var(--wx-shadow-medium);
-    --wx-modal-border: 1px solid #ffffff42;
-    --wx-modal-border-radius: var(--wx-border-radius);
-    --wx-modal-width: 280px;
-    --wx-modal-padding: 16px 20px;
-    --wx-modal-gutter: 14px;
-    --wx-modal-backdrop: rgba(108, 114, 131, 0.2);
-    --wx-modal-header-font-family: var(--wx-font-family);
-    --wx-modal-header-font-size: var(--wx-font-size-hd);
-    --wx-modal-header-line-height: var(--wx-line-height-hd);
-    --wx-modal-header-font-weight: var(--wx-font-weight-b);
-    --wx-modal-header-font-color: #fff;
-    /* end modal */
-
-    /* notice */
-    --wx-notice-z-index: 1010;
-    --wx-notice-background: var(--wx-background-alt);
-    --wx-notice-shadow: var(--wx-shadow-medium);
-    --wx-notice-border: none;
-    --wx-notice-border-radius: 0 var(--wx-border-radius)
-        var(--wx-border-radius) 0;
-    --wx-notice-margin: 6px 12px;
-    --wx-notice-font-family: var(--wx-font-family);
-    --wx-notice-font-size: var(--wx-font-size);
-    --wx-notice-line-height: var(--wx-line-height);
-    --wx-notice-font-weight: var(--wx-font-weight);
-    --wx-notice-font-color: var(--wx-color-font);
-    --wx-notice-padding: 14px;
-    --wx-notice-width: 240px;
-    --wx-notice-icon-size: var(--wx-icon-size);
-    --wx-notice-icon-color: var(--wx-icon-color);
-    --wx-notice-type-border-width: 4px;
-    --wx-notice-type-border-color: var(--wx-icon-color);
-    --wx-notice-type-font-color: var(--wx-color-font);
-    --wx-notice-type-icon-color: #9fa1ae;
-    --wx-notice-type-background-opacity: 0;
-    --wx-notice-type-close-hover-opacity: 1;
-    /* end notice */
-
-    /* calendar */
-    --wx-calendar-padding: 16px;
-    --wx-calendar-cell-size: 32px;
-    --wx-calendar-gap: 4px;
-    --wx-calendar-line-gap: 4px;
-    --wx-calendar-border-radius: var(--wx-border-radius);
-    --wx-calendar-font-family: var(--wx-font-family);
-    --wx-calendar-font-size: var(--wx-font-size);
-    --wx-calendar-line-height: var(--wx-line-height);
-    --wx-calendar-font-weight: var(--wx-font-weight);
-    --wx-calendar-font-color: var(--wx-color-font);
-    --wx-calendar-icon-color: var(--wx-icon-color);
-    --wx-calendar-icon-size: var(--wx-icon-size);
-    --wx-calendar-header-font-size: var(--wx-font-size);
-    --wx-calendar-header-line-height: var(--wx-line-height);
-    --wx-calendar-header-font-weight: var(--wx-font-weight-md);
-    --wx-calendar-controls-font-family: var(--wx-button-font-family);
-    --wx-calendar-controls-font-size: var(--wx-font-size);
-    --wx-calendar-controls-line-height: var(--wx-line-height);
-    --wx-calendar-controls-font-weight: var(--wx-font-weight);
-    --wx-calendar-controls-font-color: var(--wx-color-font);
-    /* end calendar */
+@mixin dark-tokens {
+	--c-bg: #07080d;
+	--c-bg2: #0f111a;
+	--c-bg3: #161925;
+	--c-line: #282c3d;
+	--c-text: #dfe2ec;
+	--c-muted: #979db2;
+	--c-head: #f5e61c;
+	--c-link: #4aa9ff;
+	--c-link-hover: #93ccff;
+	--c-btn: #f5e61c;
+	--c-btn-hover: #fff36b;
+	--c-btn-ink: #0b0c12;
+	--c-neon-y: #f5e61c;
+	--c-neon-b: #2f8cff;
+	--c-fx-1: #f5e61c;
+	--c-fx-2: #2f8cff;
+	--code-token-keyword: #ff7ab8;
+	--code-token-constant: #ffa64d;
+	--code-token-parameter: #c6b3ff;
+	--code-token-punctuation: #a9afc4;
+	--code-token-inserted: #5fd38d;
+	--code-token-deleted: #ff7a7a;
 }
 
-:global(.wx-amun-theme) {
-    font-family: var(--wx-font-family);
-    font-size: var(--wx-font-size);
-    line-height: var(--wx-line-height);
-    font-weight: var(--wx-font-weight);
-    font-style: normal;
-    letter-spacing: normal;
-    text-align: left;
-    color: var(--wx-color-font);
-    /*backdrop-filter: blur(2px);*/ 
-    /* This can't be a thing, because it hijacks the container of fixed nav*/
-    /* https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block */
-    /*background: var(--wx-background);*/
+:root {
+	--c-bg: #f3f4f8;
+	--c-bg2: #ffffff;
+	--c-bg3: #e9ecf3;
+	--c-line: #cfd4e0;
+	--c-text: #161924;
+	--c-muted: #50576b;
+	--c-head: #5c5100;
+	--c-link: #0a56bf;
+	--c-link-hover: #063d8a;
+	--c-btn: #f2e31b;
+	--c-btn-hover: #ffef3a;
+	--c-btn-ink: #0b0c12;
+	--c-neon-y: #e3d300;
+	--c-neon-b: #1f6fe0;
+	--c-fx-1: #5c5100;
+	--c-fx-2: #0a56bf;
+	--c-ink: #0b0c12;
+
+	// Code highlighting (Shiki's CSS-variables theme, #lib/server/ghost/highlight.ts): each token
+	// colour is checked to 4.5:1 on --code-background in both schemes (e2e/theme.test.ts).
+	--code-background: var(--c-bg3);
+	--code-foreground: var(--c-text);
+	--code-token-string: var(--c-head);
+	--code-token-string-expression: var(--c-head);
+	--code-token-function: var(--c-link);
+	--code-token-link: var(--c-link-hover);
+	--code-token-comment: var(--c-muted);
+	--code-token-keyword: #a3195b;
+	--code-token-constant: #9a4a00;
+	--code-token-changed: var(--code-token-constant);
+	--code-token-parameter: #5b3cc4;
+	--code-token-punctuation: #3d4356;
+	--code-token-inserted: #1d6b3a;
+	--code-token-deleted: #b3261e;
+
+	// Fonts: self-hosted (fonts.scss); the fallbacks fill in until each one has loaded.
+	--f-display:
+		'Chakra Petch', 'Chakra Petch Fallback', 'Bahnschrift', 'DIN Alternate', system-ui, sans-serif;
+	--f-body: 'IBM Plex Sans', 'IBM Plex Sans Fallback', system-ui, 'Segoe UI', sans-serif;
+	--f-mono:
+		'JetBrains Mono', 'JetBrains Mono Fallback', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+
+	// The size of the clipped corner on cards and panels.
+	--cut: 0.875rem;
+
+	// The viewport-fixed gradient: an element painted with it takes the colour of where it sits
+	// on screen, yellow at the top and blue at the bottom, and shifts as the page scrolls. Always
+	// use it with background-attachment: fixed. --fx (neon) paints shapes; --fx-text (darker in
+	// light mode) paints gradient text; --fx-h is the neon sweep left to right, for accents that
+	// don't move (the dock).
+	--fx: linear-gradient(to bottom, var(--c-neon-y), var(--c-neon-b));
+	--fx-text: linear-gradient(to bottom, var(--c-fx-1), var(--c-fx-2));
+	--fx-h: linear-gradient(90deg, var(--c-neon-y), var(--c-neon-b));
 }
-:global(
-        .wx-amun-theme *,
-        .wx-amun-theme *:before,
-        .wx-amun-theme *:after
-    ) {
-    box-sizing: border-box;
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		@include dark-tokens;
+	}
+}
+
+:root[data-theme='dark'] {
+	@include dark-tokens;
+}
+
+// Where supported, the sweep takes the long way round the colour wheel: yellow, orange,
+// magenta, violet, blue. Older browsers keep the direct blend.
+@supports (background-image: linear-gradient(in oklch, red, blue)) {
+	:root {
+		--fx: linear-gradient(to bottom in oklch longer hue, var(--c-neon-y), var(--c-neon-b));
+		--fx-text: linear-gradient(to bottom in oklch longer hue, var(--c-fx-1), var(--c-fx-2));
+		--fx-h: linear-gradient(90deg in oklch longer hue, var(--c-neon-y), var(--c-neon-b));
+	}
+}
+
+// ── Type scale ───────────────────────────────────────────────────────────────────────────────
+// Pico's responsive typography is off (app.scss): its root grows to 125% at 1280 px, which
+// reads oversized. 16 px everywhere (so iOS doesn't zoom into focused fields), one small step
+// up on very wide screens.
+@media (min-width: 1536px) {
+	:root {
+		--pico-font-size: 106.25%;
+	}
+}
+
+// ── Pico mapping ─────────────────────────────────────────────────────────────────────────────
+// The same selectors as Pico's colour schemes, loaded after them, so these win in every state:
+// no data-theme (follows the system), data-theme="light" and data-theme="dark".
+[data-theme],
+:root:not([data-theme='dark']),
+:root:not([data-theme]) {
+	--pico-font-family: var(--f-body);
+	--pico-font-family-monospace: var(--f-mono);
+	--pico-border-radius: 0;
+	--pico-transition: 0.18s ease-out;
+	--pico-background-color: var(--c-bg);
+	--pico-color: var(--c-text);
+	--pico-text-selection-color: color-mix(in srgb, var(--c-neon-b) 35%, transparent);
+	--pico-muted-color: var(--c-muted);
+	--pico-muted-border-color: var(--c-line);
+	--pico-primary: var(--c-link);
+	--pico-primary-underline: color-mix(in srgb, var(--c-link) 45%, transparent);
+	--pico-primary-hover: var(--c-link-hover);
+	--pico-primary-hover-underline: var(--c-link-hover);
+	--pico-primary-background: var(--c-btn);
+	--pico-primary-border: var(--c-btn);
+	--pico-primary-hover-background: var(--c-btn-hover);
+	--pico-primary-hover-border: var(--c-btn-hover);
+	--pico-primary-inverse: var(--c-btn-ink);
+	--pico-primary-focus: color-mix(in srgb, var(--c-neon-b) 60%, transparent);
+	--pico-secondary: var(--c-muted);
+	--pico-secondary-background: var(--c-bg3);
+	--pico-secondary-border: var(--c-line);
+	--pico-secondary-underline: color-mix(in srgb, var(--c-muted) 45%, transparent);
+	--pico-secondary-hover: var(--c-text);
+	--pico-secondary-hover-background: var(--c-line);
+	--pico-secondary-hover-border: var(--c-muted);
+	--pico-secondary-inverse: var(--c-text);
+	--pico-secondary-focus: color-mix(in srgb, var(--c-neon-b) 60%, transparent);
+	--pico-contrast: var(--c-text);
+	--pico-contrast-background: var(--c-text);
+	--pico-contrast-inverse: var(--c-bg);
+	--pico-h1-color: var(--c-head);
+	--pico-h2-color: var(--c-head);
+	--pico-h3-color: var(--c-head);
+	--pico-h4-color: var(--c-text);
+	--pico-h5-color: var(--c-text);
+	--pico-h6-color: var(--c-muted);
+	--pico-mark-background-color: var(--c-neon-y);
+	--pico-mark-color: var(--c-ink);
+	--pico-blockquote-border-color: var(--c-neon-b);
+	--pico-blockquote-footer-color: var(--c-muted);
+	--pico-table-border-color: var(--c-line);
+	--pico-table-row-stripped-background-color: color-mix(in srgb, var(--c-bg3) 55%, transparent);
+	--pico-code-background-color: var(--c-bg3);
+	--pico-code-color: var(--c-text);
+	--pico-code-kbd-background-color: var(--c-text);
+	--pico-code-kbd-color: var(--c-bg);
+	--pico-form-element-background-color: var(--c-bg3);
+	--pico-form-element-selected-background-color: var(--c-line);
+	--pico-form-element-border-color: var(--c-line);
+	--pico-form-element-color: var(--c-text);
+	--pico-form-element-placeholder-color: var(--c-muted);
+	--pico-form-element-active-background-color: var(--c-bg2);
+	--pico-form-element-active-border-color: var(--c-neon-b);
+	--pico-form-element-focus-color: color-mix(in srgb, var(--c-neon-b) 60%, transparent);
+	--pico-card-background-color: var(--c-bg2);
+	--pico-card-border-color: var(--c-line);
+	--pico-card-box-shadow: none;
+	--pico-card-sectioning-background-color: var(--c-bg3);
+	--pico-modal-overlay-background-color: color-mix(in srgb, var(--c-bg) 78%, transparent);
+	--pico-accordion-active-summary-color: var(--c-link);
+	--pico-accordion-open-summary-color: var(--c-muted);
 }

@@ -1,0 +1,271 @@
+// Global styles: Pico's class-less build, the theme, then the basic rules on top of Pico.
+// Imported once from src/routes/+layout.svelte, so it's linked in the server-rendered <head>.
+// Everything else lives in each component's scoped <style>.
+
+@use '@picocss/pico/scss/index' as pico with (
+	// The same settings as Pico's own pico.classless.scss: <header>, <main> and <footer> are the
+	// containers, and no .class rules are compiled.
+	$enable-semantic-container: true,
+	$enable-classes: false,
+	// src/app.html wraps the app in <app style="display: contents">.
+	$semantic-root-element: 'body > app',
+	// The theme sets the type scale instead (theme.scss).
+	$enable-responsive-typography: false,
+	$modules: (
+		// Class-only modules: they compile to nothing without classes.
+		'layout/container': false,
+		'layout/grid': false,
+		'layout/overflow-auto': false,
+		'components/dropdown': false,
+		// Not used on the site yet; switch on with the first field or widget that needs one.
+		'forms/input-color': false,
+		'forms/input-date': false,
+		'forms/input-range': false,
+		'forms/input-search': false,
+		'components/group': false,
+		'components/progress': false,
+		'components/tooltip': false
+	)
+);
+@use 'fonts';
+@use 'theme';
+
+// ── Basic rules on top of Pico ───────────────────────────────────────────────────────────────
+
+// The body carries the page gutter (safe areas included) and the HUD background: a faint 2rem
+// grid and two neon glows, fixed to the viewport, static. The bottom padding keeps the last
+// content clear of the navigation dock.
+body {
+	overflow-x: clip;
+	padding-left: max(16px, env(safe-area-inset-left, 0px));
+	padding-right: max(16px, env(safe-area-inset-right, 0px));
+	padding-bottom: calc(6.5rem + env(safe-area-inset-bottom, 0px));
+	--grid: color-mix(in srgb, var(--c-line) 38%, transparent);
+	background-image:
+		radial-gradient(
+			60rem 28rem at 88% -8%,
+			color-mix(in srgb, var(--c-neon-b) 13%, transparent),
+			transparent 70%
+		),
+		radial-gradient(
+			40rem 22rem at -5% 0%,
+			color-mix(in srgb, var(--c-neon-y) 8%, transparent),
+			transparent 70%
+		),
+		linear-gradient(var(--grid) 1px, transparent 1px),
+		linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+	background-size:
+		auto,
+		auto,
+		2rem 2rem,
+		2rem 2rem;
+	background-attachment: fixed;
+}
+@media (prefers-contrast: more) {
+	body {
+		background-image: none;
+	}
+}
+html {
+	scrollbar-color: var(--c-neon-b) var(--c-bg);
+}
+// The body already has the gutter, so the semantic containers don't add their own.
+body > app > :is(main, footer) {
+	padding-inline: 0;
+}
+
+// Headings: a squared display face; h1 and h2 in capitals; a bar under h1 in the
+// viewport-fixed gradient.
+h1,
+h2,
+h3 {
+	font-family: var(--f-display);
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	text-wrap: balance;
+}
+h1,
+h2 {
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
+}
+h1::after {
+	content: '';
+	display: block;
+	width: 4.5rem;
+	height: 0.25rem;
+	margin-top: 0.6rem;
+	background: var(--fx) fixed;
+	clip-path: polygon(0 0, 100% 0, calc(100% - 0.25rem) 100%, 0 100%);
+}
+
+// Small accents in the viewport-fixed gradient: the quote tab, list numbers and bullets in
+// article text, and rules. Each changes colour as it moves up the screen. Lists that a
+// component styles itself carry its scoped class and are left alone.
+blockquote {
+	position: relative;
+	border-left: 0;
+	border-inline-start: 0;
+	padding-inline-start: calc(var(--pico-spacing) + 0.3rem);
+}
+blockquote::before {
+	content: '';
+	position: absolute;
+	inset: 0 auto 0 0;
+	width: 0.3rem;
+	background: var(--fx) fixed;
+}
+article :is(ol, ul):not([class]) {
+	padding-inline-start: 0;
+}
+article :is(ol, ul):not([class]) > li {
+	position: relative;
+	list-style: none;
+	padding-inline-start: 2.25rem;
+}
+article ol:not([class]) {
+	counter-reset: item;
+}
+article ol:not([class]) > li {
+	counter-increment: item;
+}
+article ol:not([class]) > li::before {
+	content: counter(item, decimal-leading-zero);
+	position: absolute;
+	left: 0;
+	font-family: var(--f-mono);
+	font-weight: 600;
+	font-size: 0.9em;
+	line-height: inherit;
+	background: var(--fx-text) fixed;
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+}
+article ul:not([class]) > li::before {
+	content: '';
+	position: absolute;
+	left: 0.55rem;
+	top: 0.62em;
+	width: 0.5rem;
+	height: 0.5rem;
+	background: var(--fx) fixed;
+	clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+}
+hr {
+	border: 0;
+	height: 1px;
+	background: var(--fx) fixed;
+	mask-image: linear-gradient(90deg, #000 45%, transparent);
+}
+
+// Cards: clipped corners and a hairline gradient border; on hover the border takes the
+// viewport-fixed gradient and a neon glow shows from inside.
+article {
+	border: 1px solid transparent;
+	background:
+		linear-gradient(var(--pico-card-background-color), var(--pico-card-background-color))
+			padding-box,
+		linear-gradient(
+				135deg,
+				color-mix(in srgb, var(--c-neon-y) 75%, transparent),
+				var(--c-line) 35%,
+				var(--c-line) 65%,
+				color-mix(in srgb, var(--c-neon-b) 75%, transparent)
+			)
+			border-box;
+	clip-path: polygon(
+		0 0,
+		calc(100% - var(--cut)) 0,
+		100% var(--cut),
+		100% 100%,
+		var(--cut) 100%,
+		0 calc(100% - var(--cut))
+	);
+	transition: box-shadow var(--pico-transition);
+}
+article:hover,
+article:focus-within {
+	background:
+		linear-gradient(var(--pico-card-background-color), var(--pico-card-background-color))
+			padding-box,
+		var(--fx) fixed border-box;
+	box-shadow:
+		inset 0 0 0 1px color-mix(in srgb, var(--c-neon-b) 55%, transparent),
+		inset 0 0 2rem color-mix(in srgb, var(--c-neon-b) 16%, transparent);
+}
+
+// Buttons: notched corners, painted rather than clipped so the focus ring stays visible; mono
+// capitals.
+button,
+[type='submit'],
+[type='button'],
+[role='button'],
+input::file-selector-button {
+	border-color: transparent;
+	background: linear-gradient(
+			135deg,
+			transparent 0.55rem,
+			var(--pico-background-color) 0.55rem,
+			var(--pico-background-color) calc(100% - 0.55rem),
+			transparent calc(100% - 0.55rem)
+		)
+		border-box;
+	font-family: var(--f-mono);
+	font-size: 0.8125rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+button:is(:hover, :focus-visible),
+[role='button']:is(:hover, :focus-visible) {
+	box-shadow:
+		0 0 0 var(--pico-outline-width) var(--pico-primary-focus),
+		0 0 1.25rem color-mix(in srgb, var(--pico-background-color) 45%, transparent);
+}
+
+// Form fields: a neon glow joins Pico's focus ring; labels in mono capitals.
+input:not([type='checkbox'], [type='radio']):focus,
+select:focus,
+textarea:focus {
+	box-shadow:
+		0 0 0 var(--pico-outline-width) var(--pico-form-element-focus-color),
+		0 0 1.25rem color-mix(in srgb, var(--c-neon-b) 30%, transparent);
+}
+label,
+legend {
+	font-family: var(--f-mono);
+	font-size: 0.8125rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+pre {
+	border: 1px solid var(--c-line);
+	border-left: 2px solid var(--c-neon-b);
+}
+
+// <main> takes focus from the skip link (tabindex="-1"); that focus needs no ring.
+main:focus {
+	outline: none;
+}
+
+// Page changes cross-fade quickly (the root layout starts a view transition per navigation).
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 150ms;
+}
+
+// Motion policy: with reduced motion requested, nothing animates (Pico's reduce-motion module
+// covers its own transitions; this covers ours, view transitions included).
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after,
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+		transition: none !important;
+	}
+}

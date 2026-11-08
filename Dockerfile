@@ -1,50 +1,39 @@
-# Use a specific version for reproducible builds
-FROM node:26-slim AS base
-# Set up pnpm in the base layer so it's available in all subsequent stages.
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-COPY package.json .
-# get out pnpm version from package.json and install that
-RUN PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@')[1].split('+')[0]") && npm install --global pnpm@$PNPM_VERSION
+# Pinned: keep the major in step with .nvmrc and the CI job image.
+ARG NODE_IMAGE=docker.io/library/node:26.12.1-trixie-slim
+# Where the runtime stage takes the app from: `build` builds it here (the default); `prebuilt`
+# takes CI's already-tested build output from ./prebuilt. The
+# stage that isn't used is skipped.
+ARG APP_FROM=build
 
-# --- Builder Stage ---
-# This stage installs dependencies and builds the application.
-FROM base AS builder
+# Build stage: runs on the build host's own platform (arm64 on the CI machine). Its output is plain
+# JavaScript with no runtime dependencies, so it runs on any platform.
+FROM --platform=$BUILDPLATFORM ${NODE_IMAGE} AS build
 WORKDIR /app
-
-# 1. Copy only dependency-related files first.
-# This layer is only invalidated when dependencies change.
-COPY pnpm-lock.yaml pnpm-workspace.yaml svelte.config.js package.json ./
-
-# 2. Install dependencies.
-# This step is now cached as long as the lockfile doesn't change.
-RUN pnpm install --prod=false
-
-# 3. Copy the rest of your source code.
-# The dependency layer above will remain cached if you only change these files.
-# Any change here will only trigger a rebuild from this point forward.
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
+# Node 25 and later ship without corepack: install the pnpm version named in package.json.
+RUN npm install --global "$(node -p "require('./package.json').packageManager.split('+')[0]")"
+RUN --mount=type=cache,target=/pnpm-store pnpm install --frozen-lockfile --store-dir /pnpm-store
 COPY . .
+RUN pnpm build
 
-# 4. Build the application.
-RUN pnpm run build --logLevel error
+# CI's build output: ./prebuilt holds build/ and package.json.
+FROM scratch AS prebuilt
+COPY prebuilt/ /app/
 
-# 5. Remove development dependencies.
-RUN pnpm prune --prod
+FROM ${APP_FROM} AS app
 
-# --- Final Stage ---
-# This stage creates the small, final image with only what's needed to run.
-FROM base
+# Runtime stage: the target platform (linux/amd64 for the server). It has no RUN steps, so building
+# it on another architecture needs no emulation. It holds only the build output and package.json.
+FROM ${NODE_IMAGE}
+ENV NODE_ENV=production PORT=3000
 WORKDIR /app
-
-# Copy the pruned production dependencies from the builder stage.
-COPY --from=builder /app/node_modules ./node_modules
-# Copy the built application artifacts.
-COPY --from=builder /app/build ./build
-# CMD requires the static directory, so we must copy it.
-COPY --from=builder /app/static ./static
-# Copy package.json, as some libraries might read it at runtime.
-COPY --from=builder /app/package.json ./package.json
-
+COPY --from=app /app/package.json ./
+COPY --from=app /app/build ./build
+USER node
 EXPOSE 3000
-# The CMD remains the same.
-CMD [ "node", "/app/build/index.js", "--allow-fs-read=/app/build,/app/static", "--allow-fs-write=/app/uploads" ]
+# Kept only in Docker-format images: build with `podman build --format docker`.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+	CMD ["node", "-e", "fetch('http://127.0.0.1:' + process.env.PORT + '/healthz').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+# Node's permission model: the server may read only its own files, write none, and start no child
+# processes or workers. Every route works under it (checked in e2e, see playwright.config.ts).
+CMD ["node", "--permission", "--allow-fs-read=/app/build", "--allow-fs-read=/app/package.json", "--allow-net", "build/index.js"]

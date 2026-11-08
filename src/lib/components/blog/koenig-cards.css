@@ -1,0 +1,364 @@
+/*
+ * Ghost's Koenig cards in a post's HTML (rendered with {@html}, so these selectors are global;
+ * every one starts with a Koenig class). Ghost's own card CSS and JS aren't loaded: galleries are
+ * a CSS grid, toggles are <details> (#lib/server/ghost/content.ts), embeds are click-to-load.
+ */
+
+.kg-card {
+	margin: 0 0 var(--pico-typography-spacing-vertical);
+}
+
+/* ── Images ─────────────────────────────────────────────────────────────────────────────── */
+.kg-image-card img,
+.kg-gallery-image img {
+	display: block;
+	width: auto;
+	max-width: 100%;
+	height: auto;
+	margin-inline: auto;
+}
+.kg-card figcaption {
+	margin-top: 0.5rem;
+	text-align: center;
+}
+/* Wide cards break out of the 44 rem column on large screens; full ones span the viewport. */
+.kg-width-wide {
+	width: min(100vw - 2rem, 60rem);
+	margin-inline: 50%;
+	transform: translateX(-50%);
+}
+.kg-width-full {
+	width: 100vw;
+	margin-inline: 50%;
+	transform: translateX(-50%);
+}
+.kg-width-wide img,
+.kg-width-full img {
+	width: 100%;
+}
+
+/* ── Gallery ────────────────────────────────────────────────────────────────────────────── */
+.kg-gallery-container {
+	display: grid;
+	gap: 0.5rem;
+}
+.kg-gallery-row {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	gap: 0.5rem;
+}
+.kg-gallery-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* ── Bookmark: text on the left, the site's picture on the right; stacked on phones ───────── */
+.kg-bookmark-container {
+	display: flex;
+	min-height: 7.5rem;
+	border: 1px solid var(--c-line);
+	border-left: 2px solid var(--c-neon-b);
+	background: var(--c-bg2);
+	color: var(--c-text);
+	text-decoration: none;
+	transition: border-color var(--pico-transition);
+}
+.kg-bookmark-container:is(:hover, :focus-visible) {
+	border-color: var(--c-neon-b);
+}
+.kg-bookmark-content {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	gap: 0.35rem;
+	min-width: 0;
+	padding: 0.85rem 1rem;
+}
+.kg-bookmark-title {
+	color: var(--c-link);
+	font-weight: 600;
+	line-height: 1.3;
+}
+.kg-bookmark-container:hover .kg-bookmark-title {
+	color: var(--c-link-hover);
+}
+.kg-bookmark-description {
+	display: -webkit-box;
+	overflow: hidden;
+	color: var(--c-muted);
+	font-size: 0.9rem;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+.kg-bookmark-metadata {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: auto;
+	overflow: hidden;
+	color: var(--c-muted);
+	font-family: var(--f-mono);
+	font-size: 0.75rem;
+	white-space: nowrap;
+}
+.kg-bookmark-metadata > span {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.kg-bookmark-publisher::before {
+	content: '·';
+	margin-right: 0.5rem;
+}
+.kg-bookmark-icon {
+	flex: none;
+	width: 1.25rem;
+	height: 1.25rem;
+}
+.kg-bookmark-thumbnail {
+	position: relative;
+	flex: 0 0 33%;
+	max-width: 15rem;
+}
+.kg-bookmark-thumbnail img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+/* A picture that failed to load is hidden (#lib/blog/post-content.ts); so is its frame. */
+.kg-bookmark-thumbnail:has(img[hidden]) {
+	display: none;
+}
+@media (max-width: 36rem) {
+	.kg-bookmark-container {
+		flex-direction: column-reverse;
+	}
+	.kg-bookmark-thumbnail {
+		flex-basis: auto;
+		max-width: none;
+		aspect-ratio: 1.91;
+	}
+}
+
+/* ── Embeds: a click-to-load facade, then the player ────────────────────────────────────── */
+.kg-embed-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.kg-embed-facade,
+.kg-embed-player {
+	width: 100%;
+	max-width: 100%;
+	border: 0;
+}
+.kg-embed-facade {
+	position: relative;
+	display: grid;
+	place-items: end start;
+	overflow: hidden;
+	background: linear-gradient(135deg, var(--c-neon-y) -20%, var(--c-neon-b) 55%, var(--c-bg) 120%);
+	color: #f6f7fb;
+	text-decoration: none;
+	clip-path: polygon(
+		0 0,
+		100% 0,
+		100% calc(100% - var(--cut)),
+		calc(100% - var(--cut)) 100%,
+		0 100%
+	);
+}
+.kg-embed-facade img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.4s ease-out;
+}
+/* The play mark: a notched neon square with a triangle, centred. */
+.kg-embed-play {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 4.5rem;
+	height: 3.25rem;
+	translate: -50% -50%;
+	background: var(--c-ink);
+	border: 2px solid var(--c-neon-y);
+	box-shadow: 0 0 1.25rem color-mix(in srgb, var(--c-neon-y) 45%, transparent);
+	transition: box-shadow var(--pico-transition);
+}
+.kg-embed-play::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	width: 1.1rem;
+	height: 1.25rem;
+	background: var(--c-neon-y);
+	clip-path: polygon(0 0, 100% 50%, 0 100%);
+	translate: 0.15rem 0;
+}
+.kg-embed-text {
+	position: relative;
+	display: grid;
+	gap: 0.15rem;
+	width: 100%;
+	padding: 2.5rem 1rem 0.75rem;
+	background: linear-gradient(to top, rgb(7 8 13 / 0.9), transparent);
+}
+.kg-embed-title {
+	font-weight: 600;
+	line-height: 1.3;
+}
+.kg-embed-provider {
+	font-family: var(--f-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	opacity: 0.85;
+}
+.kg-embed-facade:is(:hover, :focus-visible) .kg-embed-play {
+	box-shadow: 0 0 2rem var(--c-neon-y);
+}
+.kg-embed-facade:focus-visible {
+	outline: var(--pico-outline-width) solid var(--c-neon-y);
+	outline-offset: 2px;
+	clip-path: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+	.kg-embed-facade:hover img {
+		transform: scale(1.04);
+	}
+}
+
+/* ── Callout: a dashed note ───────────────────────────────────────────────────────────── */
+.kg-callout-card {
+	display: flex;
+	gap: 0.75rem;
+	padding: 0.75rem 1rem;
+	border: 1px dashed var(--c-line);
+	border-left: 2px solid var(--c-neon-y);
+	background: var(--c-bg2);
+}
+.kg-callout-card-blue,
+.kg-callout-card-accent {
+	border-left-color: var(--c-neon-b);
+}
+.kg-callout-card-green {
+	border-left-color: var(--code-token-inserted);
+}
+.kg-callout-card-red,
+.kg-callout-card-pink {
+	border-left-color: var(--code-token-deleted);
+}
+.kg-callout-card-purple {
+	border-left-color: var(--code-token-parameter);
+}
+.kg-callout-emoji {
+	flex: none;
+	font-size: 1.25rem;
+	line-height: 1.5;
+}
+.kg-callout-text {
+	align-self: center;
+}
+
+/* ── Header card: Ghost's colours stay inline; the card gets the site's frame ───────────── */
+.kg-header-card {
+	padding: clamp(2rem, 6vw, 4rem) 1.5rem;
+	clip-path: polygon(
+		0 0,
+		100% 0,
+		100% calc(100% - var(--cut)),
+		calc(100% - var(--cut)) 100%,
+		0 100%
+	);
+}
+.kg-header-card-text.kg-align-center {
+	text-align: center;
+}
+.kg-header-card-heading {
+	margin: 0 0 0.5rem;
+	font-size: clamp(1.75rem, 5vw, 2.6rem);
+}
+.kg-header-card-subheading {
+	margin: 0;
+	font-size: 1.15rem;
+}
+
+/* ── File card: a download row ──────────────────────────────────────────────────────────── */
+.kg-file-card-container {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.85rem 1rem;
+	border: 1px solid var(--c-line);
+	border-left: 2px solid var(--c-neon-b);
+	background: var(--c-bg2);
+	color: var(--c-text);
+	text-decoration: none;
+}
+.kg-file-card-container:is(:hover, :focus-visible) {
+	border-color: var(--c-neon-b);
+}
+.kg-file-card-contents {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+.kg-file-card-title {
+	color: var(--c-link);
+	font-weight: 600;
+}
+.kg-file-card-caption:empty {
+	display: none;
+}
+.kg-file-card-metadata {
+	display: flex;
+	gap: 0.75rem;
+	color: var(--c-muted);
+	font-family: var(--f-mono);
+	font-size: 0.75rem;
+}
+.kg-file-card-icon svg {
+	width: 2rem;
+	height: 2rem;
+	color: var(--c-link);
+}
+/* Ghost styled the icon with a <style> inside the SVG; content.ts removes it, this replaces it. */
+.kg-file-card-icon svg .a {
+	fill: none;
+	stroke: currentColor;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-width: 1.5px;
+}
+
+/* ── Code ───────────────────────────────────────────────────────────────────────────────── */
+.kg-code-card pre {
+	margin-bottom: 0;
+}
+
+/* ── Toggle (a <details>) ───────────────────────────────────────────────────────────────── */
+.kg-toggle-card {
+	padding: 0.5rem 1rem;
+	border: 1px solid var(--c-line);
+	border-left: 2px solid var(--c-neon-b);
+	background: var(--c-bg2);
+}
+.kg-toggle-heading {
+	cursor: pointer;
+}
+.kg-toggle-heading-text {
+	display: inline;
+	margin: 0;
+	font-size: 1.05rem;
+}
+.kg-toggle-content {
+	padding-top: 0.5rem;
+}

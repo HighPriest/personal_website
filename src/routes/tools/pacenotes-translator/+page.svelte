@@ -1,499 +1,290 @@
 <script lang="ts">
-	import {
-		type Map,
-		type MapContainer,
-		type Config,
-		type ConfigContainer
-	} from './types.ts';
-
+	import Seo from '#lib/components/Seo.svelte';
+	import { localizeHref } from '#lib/paraglide/runtime.js';
+	import * as m from '#lib/paraglide/messages.js';
+	import Kicker from '#lib/components/Kicker.svelte';
+	import CallMap from '#lib/components/tools/CallMap.svelte';
+	import FilePicker from '#lib/components/tools/FilePicker.svelte';
+	import StandardSelect from '#lib/components/tools/StandardSelect.svelte';
+	import Dialog from '#lib/components/Dialog.svelte';
 	import { onMount } from 'svelte';
-	import { page } from '$app/state';
-	import type { PageProps } from './$types';
+	import { loadCalls, loadMapping, sourcesFor, STANDARDS } from '#lib/pacenotes/data.js';
+	import { translate } from '#lib/pacenotes/engine.js';
+	import { buildMapping } from '#lib/pacenotes/mapping.js';
+	import type { CallSlot, PacenoteMapping } from '#lib/pacenotes/types.js';
 
-	import { handleTranslation } from './translation_script.ts';
-	import { detectConfigFiles, parseConfig } from './config_parse_script.ts';
+	// The same defaults and data relations as the old page (tag legacy/old-ui): "to" is a
+	// standard; "from" is one of the standards with a mapping into it.
+	let to = $state('FilipekMod');
+	let from = $state('Handwerker14');
+	let files = $state<File[]>([]);
+	let skipped = $state<string[]>([]);
 
-	import * as m from '$lib/paraglide/messages.js';
-	import Dropzone from 'svelte-file-dropzone';
-	import Modal from '$lib/components/Modal.svelte';
+	// The lists come from the data index, so they're in the prerendered page; the calls and the
+	// mapping of the chosen pair are fetched in the browser (#lib/pacenotes/data.ts): once on
+	// arrival, then whenever a select changes. Each load takes a number, so an older answer that
+	// arrives late can't replace a newer one.
+	const standards = STANDARDS;
+	const sources = $derived(sourcesFor(to));
+	let pair = $state<{ from: CallSlot[]; to: CallSlot[]; mapping: PacenoteMapping[] }>();
+	let loadFailed = $state(false);
+	let loads = 0;
 
-	//import { trackPageView, trackEvent } from '@lukulent/svelte-umami';
-	//import { error } from 'console';
-	let { data }: PageProps = $props();
-
-	let modalContents: string | undefined = $state(undefined);
-
-	interface Settings {
-		from: {
-			name: string;
-			config?: Config[];
-		};
-		to: {
-			name: string;
-			config?: Config[];
-		};
-	}
-
-	let settings: Settings = $state({
-		from: {
-			name: 'Handwerker14'
-		},
-		to: {
-			name: 'FilipekMod'
-		}
-	});
-	type FileState = { accepted: File[]; rejected: File[] };
-	let filesPacenotes: FileState = $state({
-		accepted: [],
-		rejected: []
-	});
-	let filesConfig: FileState = $state({
-		accepted: [],
-		rejected: []
-	});
-	let zipElement: HTMLAnchorElement;
-
-	let configs = $derived({
-		from: data.configsParsed.find((element) => element.name == settings.from.name)?.config,
-		to: data.configsParsed.find((element) => element.name == settings.to.name)?.config
-	});
-	let maps: MapContainer[] = $derived(
-		data.configsParsed.find((element) => element.name == settings.to.name)?.maps!
-	);
-	let mapPacenoteNames: { [old_pacenote: string]: string } = {};
-
-	let _currentNote: string[] | undefined;
-
-	onMount(() => {
-		//trackPageView({url: page.url.pathname });
-	})
-
-	$effect(() => {
-		if (filesPacenotes.accepted) {
-			const formData = new FormData();
-			formData.append('state', 'load');
-			for (const file of filesPacenotes.accepted) {
-				formData.append('pacenotes', file);
-			}
-
-			//trackEvent('RBR Files Upload', { type: 'Pacenotes'});
-
-			fetch('/tools/pacenotes-translator?/loadPacenotes', {
-				method: 'POST',
-				body: formData
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					$inspect('Pacenotes loaded: ', data);
-				})
-				.catch((error) => {
-					console.error('Error loading pacenotes: ', error);
-				});
-		}
-		if (filesConfig.accepted) {
-			// TODO: Leave parsing config for later.
-			// It is going to require inclusion of ini parser on client side & some replacement functions. Let's handle it in future stages
-			const formData = new FormData();
-			formData.append('state', 'load');
-			for (const file of filesConfig.accepted) {
-				formData.append('config', file);
-			}
-
-			//trackEvent('RBR Files Upload', { type: 'Config'});
-
-			fetch('/tools/pacenotes-translator?/loadConfig', {
-				method: 'POST',
-				body: formData
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					$inspect('Config loaded: ', data);
-				})
-				.catch((error) => {
-					console.error('Error loading config: ', error);
-				});
-		}
-	});
-
-	function handlePacenoteFilesUpload(event: {
-		detail: { acceptedFiles: File[]; fileRejections: File[] };
-	}) {
-		const { acceptedFiles, fileRejections } = event.detail;
-
-		filesPacenotes.accepted = [...filesPacenotes.accepted, ...acceptedFiles];
-		filesPacenotes.rejected = [...filesPacenotes.rejected, ...fileRejections];
-	}
-
-	function handleConfigFilesUpload(event: {
-		detail: {acceptedFiles: File[]; fileRejections: File[] };
-	}) {
-		const { acceptedFiles, fileRejections } = event.detail;
-
-		let rootConfig = acceptedFiles.find((file => file.name.toLowerCase() === 'rbr.ini'));
-
-		if (rootConfig) {
-			detectConfigFiles(rootConfig, acceptedFiles).then((filesToParse) => {
-				let configFile:ConfigContainer = {
-					name: "Your config", // This is wrong, this needs to be called "Your Config", or taken from user input
-					config: [],
-					maps: []
-				};
-				filesToParse.forEach(fileToParse => {
-					filesConfig.accepted = [...filesConfig.accepted, fileToParse]
-					parseConfig(fileToParse).then((pacenotes) => {
-						configFile.config.push(...pacenotes);
-					});
-				});
-				
-				// TODO: Add created config to the list of configs in data.configsParsed 
-				data.configsParsed = [...data.configsParsed, configFile];
-
-				// TODO: To each config, add this config as a map in data.mapsParsed
-				data.configsParsed.forEach((config) => {
-					if (config.name != configFile.name) {
-						config.maps = [...config.maps, {name: configFile.name, map: []}]
-					}
-				})
-			});
-		// filesConfig.accepted = [...filesConfig.accepted, ...acceptedFiles];
-		// TODO: (Unimportant) Move all the not used files from accepted to rejected
-		filesConfig.rejected = [...filesConfig.rejected, ...fileRejections];
-		} else {
-			modalContents = 'No root config found. Please upload RBR.ini';
-			console.error('No root config found. Please upload RBR.ini');
-		}
-	}
-
-	function handleSave() {
-		let new_maps: Map[] = [];
-
-		// Update for each value in config from
-		configs.from?.forEach((pacenote) => {
-			// Check if the id is of a usable thing. Not some pacenote which doesn't have an id
-			if (!isNaN(pacenote.id)) {
-				let temp = '';
-				// If the old_pacenote has a mapping in pacenotenames (they always should)
-				if ((temp = mapPacenoteNames[pacenote.slot])) {
-					const sourceMap = maps.find((element) => element.name === settings.from.name)!.map; // These values need to exist, because we are accessign them, because we have read them before
-					const old_map = sourceMap.find((element) => element.old_pacenote === pacenote.slot); // These values might not exist before in the map
-
-					// Generate a completely new map
-					const new_map = {
-						old_category: pacenote.category,
-						old_id: pacenote.id,
-						old_pacenote: pacenote.slot,
-						// Take each pacenote, separated by +
-						// map all these pacenote texts, to ids from "config.to"
-						// filter out undefineds.
-						// TODO: Now that I think about it. It shouldn't happen that we don't match some value.
-						// Also add try, catch with modal error here, when values are missing in config.to.
-						// Just in case the user has put in wrong value & we have not caught it before
-						new_category: temp
-							.split('+')
-							.map((note) => configs.to?.find((value) => value.slot === note)?.category)
-							.filter((category) => category !== undefined),
-						new_id: temp
-							.split('+')
-							.map((note) => configs.to?.find((value) => value.slot === note)?.id)
-							.filter((id) => id !== undefined),
-						new_pacenote: temp
-							.split('+')
-							.map((note) => configs.to?.find((value) => value.slot === note)?.slot)
-							.filter((slot) => slot !== undefined)
-					};
-
-					/*if (old_map != undefined) {
-              Object.assign(old_map, new_map);
-            } else {
-              sourceMap.push(new_map);
-            }*/
-					new_maps.push(new_map);
-					// Update current map
-				}
-			}
-		});
-
-		return new_maps;
-	}
-
-	async function handleSubmit(event) {
-		event.preventDefault();
-
-		// Find a relevant map, from the "from" list
-		// When I am going to handle importing configs, the "Personal config" is going to be added to the FROM list. So, this is going to work fine.
-		let map = handleSave();
-
-		let missing_map;
+	async function loadPair() {
+		const load = ++loads;
+		loadFailed = false;
 		try {
-			// Validate file upload, map existence & some selection being made for settings.from & settings to
-			if (!filesPacenotes || !map || !settings.from.name || !settings.to.name) {
-				throw new Error('Missing required fields');
+			const [fromCalls, toCalls, mapping] = await Promise.all([
+				loadCalls(from),
+				loadCalls(to),
+				loadMapping(from, to)
+			]);
+			if (load === loads) pair = { from: fromCalls, to: toCalls, mapping };
+		} catch {
+			if (load === loads) {
+				pair = undefined;
+				loadFailed = true;
 			}
-
-			// Validate that all pacenotes have valid mappings
-			const isValid = configs.from!.every((element) => {
-				missing_map = element.slot;
-				return (
-					configs.to?.some((config) =>
-						config.slot.localeCompare(mapPacenoteNames[element.slot].split('+').pop()!, undefined, {
-							sensitivity: 'accent'
-						})
-					) ?? false
-					// TODO: Make sure this doesn't error out on split. Instead, throws a valid error on value missing.
-				);
-			});
-			if (!isValid) {
-				throw new Error('Invalid or missing pacenote mappings detected');
-			}
-		} catch (error) {
-			// TODO: Add a modal about missing map.
-			modalContents = 'Validation failed<br>Check contents of element: ' + missing_map;
-			console.error('Last checked element:', missing_map);
-			console.error('Validation failed: ', error);
-			return;
 		}
+	}
+	onMount(loadPair);
 
-		await handleTranslation(
-			filesPacenotes.accepted,
-			map,
-			/*mapPacenoteNames,*/ settings.to.name
-		).then((blob) => {
-			const link = document.createElement('a');
-			link.href = URL.createObjectURL(blob);
-			link.className = "";
-			link.style = "font-size: 2em; font-weight: bold";
-			link.download = 'translated_pacenotes.zip';
-			link.text = m.codriver_translator_download();
-			zipElement.replaceWith(link);
-		});
+	// The visitor's call map edits, kept per pair (switching back finds them again).
+	let editsByPair = $state<Record<string, Record<string, string>>>({});
+	const pairKey = $derived(`${from}→${to}`);
+	const edits = $derived(editsByPair[pairKey] ?? {});
+	let invalid = $state<string[]>([]);
+
+	function edit(slot: string, value: string) {
+		(editsByPair[pairKey] ??= {})[slot] = value;
+		invalid = invalid.filter((other) => other !== slot);
 	}
 
-	/*
-  Function for filtering unique categories in a category. I have no idea how to separate individual Slots by category. So it stays here for future reference.
-  function onlyUnique(config:Config, index:number, array:Config[]):boolean {
-    return array.findIndex(c => c.category === config.category) === index;
-  } */
+	// Names can repeat in the data (a slot name used by two calls), so the lists offered in the
+	// form are de-duplicated.
+	const unique = (names: string[]) => [...new Set(names)];
+	const targets = $derived(unique(pair?.to.map((call) => call.slot) ?? []));
+	const rows = $derived(
+		(pair?.from ?? [])
+			.filter((call) => !isNaN(call.id))
+			.map((call) => ({
+				call,
+				slot: call.slot,
+				target:
+					pair?.mapping.find((entry) => entry.old_id === call.id)?.new_pacenote.join('+') ?? ''
+			}))
+	);
+	const unmapped = $derived(rows.filter((row) => !(edits[row.slot] ?? row.target)).length);
 
-	function sortingConfig(a: Config, b: Config) {
-		if (a.slot < b.slot) {
-			return -1;
+	// The result of the last save, shown in the dialog: the translation and its download, or why
+	// it couldn't be made.
+	type Outcome =
+		| {
+				ok: true;
+				url: string;
+				files: number;
+				mapped: number;
+				unchanged: number;
+				from: string;
+				to: string;
+		  }
+		| { ok: false; message: string };
+	let outcome = $state<Outcome>();
+	let dialogOpen = $state(false);
+	let busy = $state(false);
+
+	function show(next: Outcome) {
+		if (outcome?.ok) URL.revokeObjectURL(outcome.url);
+		outcome = next;
+		dialogOpen = true;
+	}
+
+	async function save(event: SubmitEvent) {
+		event.preventDefault();
+		if (busy) return;
+		if (files.length === 0) return show({ ok: false, message: m.tr_error_no_files() });
+		if (!pair) return show({ ok: false, message: m.tr_error_no_data() });
+
+		// Only rows the visitor changed are rebuilt; the rest keep the data's ids.
+		const changed = rows
+			.filter((row) => row.slot in edits && edits[row.slot] !== row.target)
+			.map((row) => ({ call: row.call, target: edits[row.slot] }));
+		const { mapping, unknown } = buildMapping(pair.mapping, changed, pair.to);
+		invalid = unknown;
+		if (unknown.length) {
+			return show({ ok: false, message: m.tr_error_unknown({ to, slots: unknown.join(', ') }) });
 		}
-		if (a.slot > b.slot) {
-			return 1;
+
+		busy = true;
+		try {
+			const result = await translate(files, mapping, to);
+			show({
+				ok: true,
+				url: URL.createObjectURL(result.zip),
+				files: result.files,
+				mapped: result.mapped,
+				unchanged: result.unchanged,
+				from,
+				to
+			});
+		} catch (error) {
+			const reason = error instanceof Error ? error.message : String(error);
+			show({ ok: false, message: m.tr_error_failed({ reason }) });
+		} finally {
+			busy = false;
 		}
-		return 0;
+	}
+
+	function reset() {
+		files = [];
+		skipped = [];
+		editsByPair = {};
+		invalid = [];
 	}
 </script>
 
-{#if modalContents}
-	<Modal message={modalContents} onClose={() => (modalContents = undefined)} />
-{/if}
+<Seo title="{m.tool_translator_title()} · Amun" description={m.tr_lead()} />
 
-<h1>Virtual CoDriver</h1>
-<p>{@html m.codriver_translator_subtitle()}</p>
+<header>
+	<Kicker>
+		<a href={localizeHref('/tools')}>{m.nav_simracing()}</a> / {m.tool_translator_title()}
+	</Kicker>
+	<h1>{m.tool_translator_title()}</h1>
+</header>
 
-<article>
-	<div style="max-width: 25em;">
-		<form onsubmit={handleSubmit}>
-			<!-- TODO: Replace the button with something that makes it clear, that we want a folder -->
-			<!-- TODO: Make it also accept individual files -->
-			<Dropzone containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handlePacenoteFilesUpload} preventDropOnDocument={true} multiple={true} accept=".ini">
-				<p>{@html m.codriver_translator_pacenotes()}</p>
-				<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-					<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
-					<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
-						{@html m.codriver_translator_pacenote_upload_box()}
-					</p>
-					<!--<p style="font-size: 0.75rem; line-height: 1rem; color: rgb(107,114,128);">
-						{accept}
-						{#if maxSize}
-							<span>(Size limit: {formatFileSize(maxSize)})</span>
-						{/if}
-					</p>-->
-				</div>
-			</Dropzone>
-			<!--<input
-				bind:files={filesPacenotes}
-				type="file"
-				name="pacenotesToTranslate"
-				id="pacenotesToTranslate"
-				webkitdirectory
-				multiple
-			/>-->
-			<br /><br />
-			<!--TODO: Create configuration parsing in JavaScript-->
-			<!-- When configuration is uploaded, just create a new translate from map, without anything on output -->
-			<button type="submit">{@html m.codriver_translator_translate()}</button>
-			<br /><br />
-			<!--<Button type={'primary'}>{@html m.codriver_translator_translate()}</Button>-->
-			<a aria-label="Download zip output button" href="./pacenotes-translator" bind:this={zipElement}
-			></a>
-		</form>
-		<ul id="uploadedFiles">
-			<h3>Uploaded Configs</h3>
-			{#each filesConfig.accepted as configFile}
-				<li>{configFile.name}</li>
-			{/each}
-			<h3>Uploaded Pacenotes</h3>
-			{#each filesPacenotes.accepted as pacenoteFile}
-				<li>{pacenoteFile.name}</li>
-			{/each}
-		</ul>
+<!-- Controls in one column, the call map in a side column. Nothing leaves
+	the browser: the files are read and translated here. -->
+<form class="translator" onsubmit={save}>
+	<div class="controls">
+		<FilePicker bind:files bind:skipped />
+		<div class="pair">
+			<StandardSelect
+				id="translate-from"
+				label={m.tr_from()}
+				options={sources}
+				bind:value={
+					() => from,
+					(value) => {
+						from = value;
+						loadPair();
+					}
+				}
+			/>
+			<StandardSelect
+				id="translate-to"
+				label={m.tr_to()}
+				options={standards}
+				bind:value={
+					() => to,
+					(value) => {
+						to = value;
+						loadPair();
+					}
+				}
+			/>
+		</div>
+		<p class="status" role="status">
+			<span>{m.tr_status_files()} <b>{files.length}</b></span>
+			<span>{m.tr_status_calls()} <b>{rows.length}</b></span>
+			<span>{m.tr_status_unmapped()} <b>{unmapped}</b></span>
+			{#if loadFailed}<span class="warn">{m.tr_status_load_failed()}</span>{/if}
+			{#if skipped.length}
+				<span class="skipped"
+					>{m.tr_skipped({ count: skipped.length, names: skipped.join(', ') })}</span
+				>
+			{/if}
+		</p>
+		<div class="actions">
+			<button type="submit" aria-busy={busy}>{busy ? m.tr_busy() : m.tr_save()}</button>
+			<button type="button" onclick={reset}>{m.tr_reset()}</button>
+		</div>
 	</div>
 
-		<div id="map-of-values">
-			<!-- TODO: Add a hover notice, that it might be difficult to map your own config -->
-			<!-- TODO: Handle user config parsing later. It is not worth the hustle for now -->
-			<div>
-				<Dropzone     
-					on:dragover={() => {
-						const dz = document.querySelector('.customDropzone');
-						if (dz) dz.classList.add('dragover');
-					}}
-					on:dragleave={() => {
-						const dz = document.querySelector('.customDropzone');
-						if (dz) dz.classList.remove('dragover');
-					}}
-					on:drop={() => {
-						const dz = document.querySelector('.customDropzone');
-						if (dz) dz.classList.remove('dragover');
-					}}
-					containerClasses="customDropzone" disableDefaultStyles={true} on:drop={handleConfigFilesUpload} preventDropOnDocument={true} noClick={true} accept=".ini">
-					<p>{@html m.codriver_translator_config()}</p>
-					<div style="pointer-events: none; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
-						<svg style="scale: 2.5;" xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-file-analytics"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17l0 -5" /><path d="M12 17l0 -1" /><path d="M15 17l0 -3" /></svg>
-						<p style="font-size: 1.25rem; line-height: 1.5rem; color: rgb(107,114,128);">
-							{@html m.codriver_translator_config_upload_box()}
-						</p>
-					</div>
-				</Dropzone>
-			</div>
-			<br>
-			<div class="inline">
-				<div>
-					<p>{@html m.codriver_translator_translate_from()}</p>
-					<select
-						name="configInput"
-						id="configInput"
-						bind:value={settings.from.name}
-						class:invalid={!settings.from.name}
-					>
-						{#each maps as config}
-							<option value={config.name}>{config.name}</option>
-						{/each}
-					</select>
-				</div>
-				<p style="display:inline;"></p>
-				<div>
-					<p>{@html m.codriver_translator_translate_to()}</p>
-					<select
-						name="configOutput"
-						id="configOutput"
-						bind:value={settings.to.name}
-						class:invalid={!settings.to.name}
-					>
-						{#each data.configsParsed as config}
-							<option value={config.name}>{config.name}</option>
-						{/each}
-					</select>
-				</div>
-			</div>
-			<div class="inline">
-				<br />
-				<h3>{@html m.codriver_translator_map()}</h3>
-				<!-- Tworzy linijkę dla każdego translate config.from -->
-				<!-- Daje możliwość zmiany wartości Translate to -->
-				<!-- Datalist opcji jest brany z Translate to -->
-				<details>
-				<summary style="cursor: pointer; font-weight: 600; margin: .25rem 0;">Click to open Map of callouts</summary>
-				{#each configs.from! as pacenote}
-					{#if !isNaN(pacenote.id)}
-						{#if (_currentNote = maps
-							.find((element) => element.name == settings.from.name)
-							?.map.find((element) => element.old_id == pacenote.id)?.new_pacenote)}
-							{void (mapPacenoteNames[pacenote.slot] = _currentNote.join('+'))}
-						{/if}
-						<div>
-							<span> {pacenote.slot} =>
-							<input
-								type="text"
-								list="id_new"
-								bind:value={mapPacenoteNames[pacenote.slot]}
-								name={pacenote.id.toString()}
-								id={pacenote.slot + '_' + pacenote.id}
-							/> </span>
-							<!-- TODO: Add visual validation, so no row is empty -->
-						</div>
-						<br />
-					{/if}
-					{void (_currentNote = undefined)}
-				{/each}
-				</details>
-				<datalist id="id_new">
-					{#each data.configsParsed
-						.find((element) => element.name == settings.to.name)
-						?.config.sort(sortingConfig) ?? [] as config}
-						<option value={config.slot}></option>
-						<!-- TODO: As NAME, attach polish translations to new_pacenote, so it is easier for people to find stuff out -->
-						<!-- This requires augmenting config files with translations -->
-					{/each}
-				</datalist>
-			</div>
-		</div>
-</article>
+	<CallMap {from} {to} {rows} {targets} {edits} {invalid} onedit={edit} />
+</form>
 
-<style lang="scss">
-	article {
-		width: 100%;
-		max-width: fit-content;
+<Dialog
+	bind:open={dialogOpen}
+	title={outcome?.ok ? m.tr_done_title() : m.tr_error_title()}
+	closeLabel={m.tr_close()}
+>
+	{#if outcome?.ok}
+		<p>
+			{m.tr_done_text({
+				files: outcome.files,
+				from: outcome.from,
+				to: outcome.to,
+				mapped: outcome.mapped,
+				unchanged: outcome.unchanged
+			})}
+		</p>
+	{:else if outcome}
+		<p>{outcome.message}</p>
+	{/if}
+	{#snippet actions()}
+		{#if outcome?.ok}
+			<a role="button" href={outcome.url} download="translated_pacenotes.zip">{m.tr_download()}</a>
+		{/if}
+	{/snippet}
+</Dialog>
+
+<style>
+	header {
+		padding-top: 1rem;
+	}
+	.translator {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 1.5rem 2.5rem;
+	}
+	.controls {
+		align-self: start;
+	}
+	.pair {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+		gap: 0 1rem;
+	}
+	.status {
 		display: flex;
-		flex-direction: row;
 		flex-wrap: wrap;
-		align-content: space-between;
-		justify-content: center;
-		> div {
-			margin: 2rem;
-		}
+		gap: 0.25rem 1.5rem;
+		margin: 0 0 1.25rem;
+		padding: 0.6rem 0.8rem;
+		border: 1px dashed var(--c-line);
+		font-family: var(--f-mono);
+		font-size: 0.75rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--pico-muted-color);
 	}
-
-	#map-of-values {
-		.inline {
-			text-align: end;
-			div {
-				display: inline-block;
-				overflow: visible;
-    			width: max-content;
-			}
-		}
+	.status b {
+		color: var(--c-text);
+		font-weight: 600;
 	}
-
-	:global(.customDropzone) {
-		position: relative;
+	.status .warn {
+		color: var(--code-token-deleted);
+	}
+	/* Skipped file names can be long: they wrap within the line and keep their case. */
+	.status .skipped {
+		flex-basis: 100%;
+		overflow-wrap: anywhere;
+		text-transform: none;
+		letter-spacing: 0;
+	}
+	.actions {
 		display: flex;
-		min-height: 200px;
-		width: 300px;
-		cursor: pointer;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 1rem;
-		border-radius: 0.75rem;
-		border-width: 2px;
-		border-style: dashed;
-		border-color: #d1d5db;
-		background-color: #f9fafb;
-		padding: 1.5rem;
-		margin: auto;
-		text-align: center;
-		transition: color, background-color, border-color, text-decoration-color, fill, stroke;
-		transition-duration: 0.5s;
-		border-color: #374151;
-		background-color: #1f2937;
-		&:hover, &:focus, &.dragover {
-			background-color: #f3f4f6;
-			svg {
-				color: black;
-			}
+		flex-wrap: wrap;
+		gap: 0.75rem;
+	}
+	.actions button {
+		width: auto;
+		margin: 0;
+	}
+	@media (min-width: 960px) {
+		.translator {
+			grid-template-columns: minmax(20rem, 1fr) minmax(0, 1.15fr);
+			align-items: start;
 		}
 	}
 </style>

@@ -1,24 +1,25 @@
-# Ignore git history
+# The image builds from source: send only what `pnpm install` and `pnpm build` need.
 **/.git
-
-# Ignore local dependencies (they are installed inside the container)
 **/node_modules/
+.pnpm-store/
 
-# Ignore build artifacts if they exist locally
+# Build and test output (only the root build/: CI passes its tested build in prebuilt/build)
+/build
 **/dist
 **/.svelte-kit
-**/build
+src/lib/paraglide/
+playwright-report/
+test-results/
 
-# Env
+# Local files
 .env
 .env.*
 !.env.example
 !.env.test
-
-# Vite
+uploads/
+.claude/
+.vscode/
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
-
-# Ignore system files
 Thumbs.db
 .DS_Store
